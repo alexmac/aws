@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM Group for developers
+
+Resources:
+  DevelopersGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: developers
+      ManagedPolicyArns:
+      - !Sub "arn:aws:iam::${AWS::AccountId}:policy/packer-user"
+
+Outputs:
+  DevelopersGroupArn:
+    Description: "The ARN of the Developers IAM Group"
+    Value: !GetAtt DevelopersGroup.Arn
