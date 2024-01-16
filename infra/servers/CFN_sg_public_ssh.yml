@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  PublicSSHAccess:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: public-ssh-access
+      GroupDescription: Allow SSH inbound traffic
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
