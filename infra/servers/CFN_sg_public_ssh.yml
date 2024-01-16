@@ -6,6 +6,9 @@ Resources:
     Properties:
       GroupName: public-ssh-access
       GroupDescription: Allow SSH inbound traffic
+      Tags:
+      - Key: Name
+        Value: public-ssh-access
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
