@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ProdSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: prod-sg
+      GroupDescription: Traffic from prod
+      Tags:
+      - Key: Name
+        Value: prod-sg
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-05a1a10cd02b0dae3
+        InstanceType: t4g.small
+        IamInstanceProfile:
+          Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/server"
+        EbsOptimized: true
+        MetadataOptions:
+          HttpTokens: required
+        Monitoring:
+          Enabled: false
+        SecurityGroupIds:
+          # - sg-081613d174e1f8e8b # public SSH access
+          - !GetAtt ProdSG.GroupId
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            cat <<'EOF' >> /etc/ecs/ecs.config
+            ECS_CLUSTER=prod
+            ECS_ENABLE_TASK_ENI=true
+            ECS_ENABLE_TASK_IAM_ROLE=true
+            ECS_LOG_MAX_FILE_SIZE_MB=100
+            ECS_LOG_MAX_ROLL_COUNT=3
+            ECS_LOG_ROLLOVER_TYPE=size
+            ECS_LOGLEVEL=info
+            ECS_AVAILABLE_LOGGING_DRIVERS=["awslogs","json-file"]
+            EOF
+
+        TagSpecifications:
+        - ResourceType: instance
+          Tags: 
+            - Key: Name
+              Value: server
+        BlockDeviceMappings:
+        - DeviceName: /dev/xvda 
+          Ebs: 
+            DeleteOnTermination: true
+            Encrypted: true
+            VolumeSize: 8
+            VolumeType: gp3
+
+  ASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: 
+        - us-west-2a
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      MinSize: '1'
+      MaxSize: '2'
+      DesiredCapacity: '1'

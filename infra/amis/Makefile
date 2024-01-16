@@ -1,6 +1,7 @@
-.PHONY: build_amis
+.PHONY: server tailscale
 
-build_amis:
-	@for file in *.hcl ; do \
-		AWS_PROFILE=packer packer build -on-error=ask $$file ; \
-	done
+server:
+	AWS_PROFILE=packer packer build -on-error=ask server.pkr.hcl
+
+tailscale:
+	AWS_PROFILE=packer packer build -on-error=ask tailscale.pkr.hcl

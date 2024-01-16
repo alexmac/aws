@@ -1,0 +1,19 @@
+################################################################################
+# startup.service
+################################################################################
+
+[Unit]
+Before=docker.service ecs.service sshd.service
+Wants=docker.service ecs.service sshd.service
+Description=Runs startup.sh
+  
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/local/ami_setup/server_scripts/startup.sh
+Restart=on-failure
+
+
+[Install]
+WantedBy=multi-user.target
