@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFront Policies
+
+Resources:
+  PublicContent:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: caching for public content
+        DefaultTTL: 60
+        MaxTTL: 86400
+        MinTTL: 10
+        Name: PublicContent
+        ParametersInCacheKeyAndForwardedToOrigin: 
+          CookiesConfig: 
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig: 
+            HeaderBehavior: none
+          QueryStringsConfig: 
+            QueryStringBehavior: all
+  PublicContentRequestPolicy:
+    Type: AWS::CloudFront::OriginRequestPolicy
+    Properties:
+      OriginRequestPolicyConfig:
+        Comment: caching for public content
+        CookiesConfig: 
+          CookieBehavior: none
+        HeadersConfig: 
+          HeaderBehavior: none
+        Name: PublicContentRequestPolicy
+        QueryStringsConfig: 
+          QueryStringBehavior: all
+  PublicContentResponseHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Comment: PublicContent
+        Name: PublicContent
+        RemoveHeadersConfig: 
+          Items:
+          - Header: Server
+        SecurityHeadersConfig:
+          ContentTypeOptions: 
+            Override: true
+          FrameOptions: 
+            FrameOption: SAMEORIGIN
+            Override: true
+          ReferrerPolicy: 
+            ReferrerPolicy: strict-origin-when-cross-origin
+            Override: true
+          StrictTransportSecurity: 
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Override: true
+            Preload: true
+        ServerTimingHeadersConfig: 
+          Enabled: true
+          SamplingRate: 100

@@ -8,6 +8,19 @@ Resources:
       Tags:
       - Key: Name
         Value: tailscale-sg
+  TailscaleSSHAccess:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: tailscale-ssh-access
+      GroupDescription: Allow SSH inbound traffic from tailscale
+      Tags:
+      - Key: Name
+        Value: tailscale-ssh-access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !GetAtt TailscaleSG.GroupId
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:

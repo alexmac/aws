@@ -12,7 +12,7 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
-        ImageId: ami-05a1a10cd02b0dae3
+        ImageId: ami-0aed6e0b56c92c057
         InstanceType: t4g.small
         IamInstanceProfile:
           Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/server"
@@ -23,6 +23,8 @@ Resources:
           Enabled: false
         SecurityGroupIds:
           # - sg-081613d174e1f8e8b # public SSH access
+          - sg-0c421753140d394d3 # Tailscale SSH ingress
+          - sg-0624fc02a7ec8da11 # ALB container Ingress
           - !GetAtt ProdSG.GroupId
         UserData:
           Fn::Base64: !Sub |

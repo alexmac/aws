@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Blog Service
+
+Resources:
+  ECSTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: cafetech
+      Cpu: 256
+      Memory: 256
+      NetworkMode: bridge
+      RequiresCompatibilities:
+        - EC2
+      ExecutionRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/ecs-execution"
+      TaskRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-cafetech"
+      ContainerDefinitions:
+        - Name: cafetech
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cafetech:ced20a4b1a0599b8f5dd5c28ca5fbd44717b68e2"
+          Essential: true
+          PortMappings:
+            - ContainerPort: 8080
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-create-group: true
+              awslogs-group: ecs-prod-cafetech
+              awslogs-region: us-west-2
+              awslogs-stream-prefix: ecs-logs
+
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: cafetech
+      Cluster: prod
+      TaskDefinition: !Ref ECSTaskDefinition
+      LaunchType: EC2
+      DesiredCount: 1
+      LoadBalancers:
+      - ContainerName: cafetech
+        ContainerPort: 8080
+        TargetGroupArn: !Sub "arn:aws:elasticloadbalancing:us-west-2:${AWS::AccountId}:targetgroup/prod-tg/713a1f7cd9f72ad7"
+
+Outputs:
+  ServiceName:
+    Description: Name of the ECS Service
+    Value: !Ref ECSService
+
+  TaskDefinition:
+    Description: Task Definition
+    Value: !Ref ECSTaskDefinition

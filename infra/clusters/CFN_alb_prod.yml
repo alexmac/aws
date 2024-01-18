@@ -15,6 +15,19 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
+  ProdHTTPSAccess:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: prod-https-access
+      GroupDescription: Allow HTTPS inbound traffic from prod
+      Tags:
+      - Key: Name
+        Value: prod-https-access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          SourceSecurityGroupId: sg-0783f2b21fc7b9448 # prod-sg
   CloudfrontHTTPSAccess:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -33,16 +46,21 @@ Resources:
     Properties:
       GroupName: prod-alb-sg
       GroupDescription: Traffic from the prod SG
+      Tags:
+      - Key: Name
+        Value: prod-alb-sg
   ALBContainerIngress:
-    # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PortMapping.html
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: prod-alb-ingress
       GroupDescription: Allow ephemeral ports from ALB
-      SecurityGroupIngress:
+      Tags:
+      - Key: Name
+        Value: prod-alb-ingress
+      SecurityGroupIngress: # /proc/sys/net/ipv4/ip_local_port_range
         - IpProtocol: tcp
-          FromPort: 49153
-          ToPort: 65535
+          FromPort: 32768
+          ToPort: 60999
           SourceSecurityGroupId: !GetAtt ProdALBSG.GroupId
   ALB:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
@@ -56,7 +74,10 @@ Resources:
       SecurityGroups:
       - !GetAtt CloudfrontHTTPSAccess.GroupId
       - !GetAtt ProdALBSG.GroupId
+      - !GetAtt ProdHTTPSAccess.GroupId
+      # - !GetAtt PublicHTTPSAccess.GroupId
       Scheme: internet-facing
+      IpAddressType: ipv4
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
@@ -66,27 +87,27 @@ Resources:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
       Name: prod-tg
-      Port: 80
+      Port: 8080
       Protocol: HTTP
       VpcId: vpc-01fff41067eddd5cf
       HealthCheckProtocol: HTTP
       HealthCheckPort: traffic-port
       HealthCheckPath: '/health'
 
-  # DefaultListener:
-  #   Type: 'AWS::ElasticLoadBalancingV2::Listener'
-  #   Properties:
-  #     DefaultActions:
-  #       - Type: forward
-  #         TargetGroupArn:
-  #           Ref: DefaultTargetGroup
-  #     LoadBalancerArn:
-  #       Ref: ALB
-  #     Port: 443
-  #     Protocol: HTTPS
-  #     SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
-  #     Certificates:
-  #       - CertificateArn: !Sub "arn:aws:acm:us-west-2:${AWS::AccountId}:certificate/c439b5cd-35d5-4052-a0f7-a09d7ebf3e0b"
+  DefaultListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn:
+            Ref: DefaultTargetGroup
+      LoadBalancerArn:
+        Ref: ALB
+      Port: 443
+      Protocol: HTTPS
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      Certificates:
+        - CertificateArn: !Sub "arn:aws:acm:us-west-2:${AWS::AccountId}:certificate/c439b5cd-35d5-4052-a0f7-a09d7ebf3e0b"
 
 Outputs:
   LoadBalancerDNSName:

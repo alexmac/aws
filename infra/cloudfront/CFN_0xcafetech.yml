@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFront Distribution with forwarding to ALB
+
+Resources:
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Aliases:
+          - 0xcafe.tech
+          - www.0xcafe.tech
+        ViewerCertificate:
+          AcmCertificateArn: !Sub 'arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/d900118a-5f6c-4239-916c-2abf4a761d83'
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
+        IPV6Enabled: false
+        HttpVersion: http2and3
+        Origins:
+          - Id: ALBOrigin
+            DomainName: alb.0xcafe.tech
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+              - TLSv1.2
+        DefaultCacheBehavior:
+          TargetOriginId: ALBOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+          - GET
+          - HEAD
+          - OPTIONS
+          - PUT
+          - PATCH
+          - POST
+          - DELETE
+          Compress: true
+          CachePolicyId: b1e2489b-00ff-4368-9338-31990e6c5e69 # PublicContent
+          OriginRequestPolicyId: c4ebc510-06db-4c3b-ad1e-21b0365bffc4 # PublicContentRequestPolicy
+          ResponseHeadersPolicyId: 050a6417-1700-4ca5-a762-936c5d859e9b # PublicContent
+
+Outputs:
+  DistributionId:
+    Description: The CloudFront Distribution ID
+    Value: !Ref CloudFrontDistribution
