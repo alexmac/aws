@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h1 {
+        @apply text-2xl;
+    }
+
+    h2 {
+        @apply text-xl;
+    }
+
+    a {
+        @apply underline underline-offset-2
+    }
+
+    body {
+        @apply font-mono gap-1 p-1 flex flex-col;
+        @apply md:grid md:grid-cols-10 md:grid-rows-12;
+    }
+
+    header {
+        @apply p-1 text-lg border border-dotted;
+        @apply md:col-start-1 md:col-span-full md:row-start-1 md:row-end-2;
+    }
+
+    nav {
+        @apply p-1 border border-dotted break-all;
+        @apply md:col-start-1 md:col-span-2 md:row-start-2 md:row-span-full
+    }
+
+    article {
+        @apply p-1 border border-dotted break-words;
+        @apply md:col-start-3 md:col-span-full md:row-start-2 md:row-span-full;
+    }
+}

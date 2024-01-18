@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An old fashioned website.">
+  <title>0xCAFE.TECH</title>
+  <link href="/tailwind.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+<body>
+  <header><a href="/">0xCAFE.TECH</a></header>
+  <nav>
+    <div class="flex flex-col justify-between h-full">
+      <ul>
+        <li>Projects</li>
+        {% for project in projects %}
+        <li><a href="/projects/{{project}}">{{project}}</a></li>
+        {% endfor %}
+      </ul>
+      <a href="https://twitter.com/dralexmac">@dralexmac</a>
+    </div>
+  </nav>
+  <article>
+    {% include '%s.html' % article_path %}
+  </article>
+</body>
+
+</html>

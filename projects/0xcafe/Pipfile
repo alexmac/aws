@@ -1,0 +1,23 @@
+[packages]
+alxhttp = "*"
+aiohttp-jinja2 = "*"
+lxml = "*"
+types-lxml = "*"
+
+[dev-packages]
+black = "*"
+isort = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+ruff = "*"
+twine = "*"
+
+[scripts]
+server = "python example/server.py"
+tidy = "bash -cxe 'isort . && black . && ruff .'"
+upload = "twine upload dist/*"
+css = "bunx tailwindcss -i ./tailwind.input.css -o ./tailwind.css --watch"
+
+[requires]
+python_version = "3.11"
