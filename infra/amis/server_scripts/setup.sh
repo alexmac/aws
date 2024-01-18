@@ -23,6 +23,7 @@ source /usr/local/ami_setup/server_scripts/ssh-harden.sh
 
 cp /usr/local/ami_setup/server_scripts/startup.service /etc/systemd/system/
 
+cp /usr/local/ami_setup/server_scripts/docker-daemon.json /etc/docker/daemon.json
 usermod -a -G docker ec2-user
 
 systemctl enable startup
