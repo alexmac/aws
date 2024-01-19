@@ -13,7 +13,7 @@ from aiohttp.web import FileResponse, Request, middleware
 from alxhttp.middleware import default_middleware
 from alxhttp.server import Server
 
-from cafetech.routes.project import get_project
+from cafetech.routes.project import get_project, get_project_bg
 from cafetech.routes.sitemap import get_sitemap
 from cafetech.routes.slash import get_slash
 
@@ -44,6 +44,7 @@ class BlogServer(Server):
         self.app.router.add_get(r"/sitemap.xml", partial(get_sitemap, self))
 
         self.app.router.add_get(r"/projects/{project_name}", partial(get_project, self))
+        self.app.router.add_get(r"/projects/{project_name}/bg.png", partial(get_project_bg, self))
 
         for f in ["robots.txt", "tailwind.css", "gh.svg"]:
             self.app.router.add_get(f"/{f}", get_file(f))

@@ -4,7 +4,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An old fashioned website.">
+
+  {% for k, v in meta_tags.items() %}
+  <meta name="{{k}}" content="{{v}}" />
+  {% endfor %}
+
+  {% for k, v in opengraph.items() %}
+  <meta property="{{k}}" content="{{v}}" />
+  {% endfor %}
+
   <title>0xCAFE.TECH</title>
   <link href="/tailwind.css" rel="stylesheet">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">

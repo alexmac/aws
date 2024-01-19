@@ -3,6 +3,7 @@ alxhttp = "*"
 aiohttp-jinja2 = "*"
 lxml = "*"
 types-lxml = "*"
+pillow = "*"
 
 [dev-packages]
 black = "*"

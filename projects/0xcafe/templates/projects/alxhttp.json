@@ -1,0 +1,6 @@
+{
+    "opengraph": {
+        "og:type": "website",
+        "og:description": "A simple python base server class for aiohttp"
+    }
+}

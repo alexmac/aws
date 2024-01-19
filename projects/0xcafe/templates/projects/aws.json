@@ -1,0 +1,9 @@
+{
+    "meta_tags": {
+        "description": "Configs for a simple but powerful AWS setup"
+    },
+    "opengraph": {
+        "og:type": "website",
+        "og:description": "Configs for a simple but powerful AWS setup"
+    }
+}
