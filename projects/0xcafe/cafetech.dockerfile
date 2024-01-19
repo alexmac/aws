@@ -22,6 +22,7 @@ COPY templates ./templates
 COPY blog_server.py ./
 COPY robots.txt ./
 COPY tailwind.css ./
+COPY gh.svg ./
 
 ENV PYTHONPATH=.
 

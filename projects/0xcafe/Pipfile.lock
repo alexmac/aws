@@ -117,12 +117,12 @@
         },
         "alxhttp": {
             "hashes": [
-                "sha256:2ab01a4d9e3240c482bfe128e692b6d6550bfa22b52110fcc5fee5c79a877dbf",
-                "sha256:79ee413fbd4b6daf12b883c690f71b13e60fd0248049e6ee2acebf2c39ebb248"
+                "sha256:7b77bd6d5d7f31634f8c61ea05cdf710383afb381613686def735b39d472d7d5",
+                "sha256:d6df1b01c9e57ebf1af844bcb9fbd27d7f526b34a21e1b5e2e6ffd8428b084aa"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.11'",
-            "version": "==0.9.2"
+            "version": "==0.9.3"
         },
         "attrs": {
             "hashes": [
