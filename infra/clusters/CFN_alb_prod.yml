@@ -109,6 +109,32 @@ Resources:
       Certificates:
         - CertificateArn: !Sub "arn:aws:acm:us-west-2:${AWS::AccountId}:certificate/c439b5cd-35d5-4052-a0f7-a09d7ebf3e0b"
 
+  CooltransTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Name: prod-cooltrans
+      Port: 8081
+      Protocol: HTTP
+      VpcId: vpc-01fff41067eddd5cf
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: traffic-port
+      HealthCheckPath: '/'
+
+  CooltransListenerRule:
+    Type: 'AWS::ElasticLoadBalancingV2::ListenerRule'
+    Properties:
+      Actions: 
+        - Type: forward
+          TargetGroupArn:
+            Ref: CooltransTargetGroup
+      Conditions: 
+      - Field: path-pattern
+        PathPatternConfig:
+          Values:
+          - '/api/cooltrans/*'
+      ListenerArn: !Ref DefaultListener
+      Priority: 100
+
 Outputs:
   LoadBalancerDNSName:
     Description: DNS Name of the Load balancer

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% for k, v in meta_tags.items() %}
+    <meta name="{{k}}" content="{{v}}" />
+    {% endfor %}
+
+    {% for k, v in opengraph.items() %}
+    <meta property="{{k}}" content="{{v}}" />
+    {% endfor %}
+
+    <title>Cooltrans</title>
+    <link href="/tailwind.css" rel="stylesheet">
+    <link href="/leaflet/leaflet.css" rel="stylesheet">
+    <link href="/video-js.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+<body>
+    <header><a href="/">0xCAFE.TECH</a> / Cooltrans</header>
+    <article id="cooltransarticle">
+        <div id="leafletmap"></div>
+        <div data-vjs-player id="vidd">
+            <video id="vid" class="video-js" controls muted autoplay playsinline>
+                <source src="/api/cooltrans/proxy/D3/89_Alpine_Meadows_PLA89_NB.stream/playlist.m3u8"
+                    type="application/x-mpegURL">
+            </video>
+        </div>
+    </article>
+    <script src="/leaflet/leaflet.js"></script>
+    <script src="/video.min.js"></script>
+    <script src="/map.js"></script>
+</body>
+
+</html>

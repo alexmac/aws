@@ -33,7 +33,7 @@ def _generate_sitemap(urls: List[URL]) -> str:
 async def get_sitemap(s: BlogServer, request):
     root = URL("https://0xcafe.tech")
 
-    urls = [root]
+    urls = [root, root / "cooltrans"]
 
     urls += [root / "projects" / project for project in valid_project_names]
 

@@ -13,6 +13,7 @@ from aiohttp.web import FileResponse, Request, middleware
 from alxhttp.middleware import default_middleware
 from alxhttp.server import Server
 
+from cafetech.routes.cooltrans import get_cooltrans
 from cafetech.routes.project import get_project, get_project_bg
 from cafetech.routes.sitemap import get_sitemap
 from cafetech.routes.slash import get_slash
@@ -28,10 +29,12 @@ def get_file(fn: str):
 @middleware
 async def security_headers(request: Request, handler: Handler):
     resp = await handler(request)
-    resp.headers["content-security-policy"] = "default-src 'self'; script-src 'self';"
+    resp.headers[
+        "content-security-policy"
+    ] = "default-src 'self'; script-src 'self'; media-src 'self' blob: ; worker-src 'self' blob: ; style-src 'self' 'unsafe-inline'; font-src 'self' data: ; img-src 'self' data: https://tile.openstreetmap.org ;"
     resp.headers[
         "permissions-policy"
-    ] = "accelerometer=(), autoplay=(), camera=(), fullscreen=(), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), payment=(), sync-xhr=()"
+    ] = "accelerometer=(), autoplay=(self), camera=(), fullscreen=(self), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), payment=(), sync-xhr=()"
     return resp
 
 
@@ -40,17 +43,34 @@ class BlogServer(Server):
         super().__init__(middlewares=middlewares)
 
         self.app.router.add_get(r"/", partial(get_slash, self))
+        self.app.router.add_get(r"/cooltrans", partial(get_cooltrans, self))
 
         self.app.router.add_get(r"/sitemap.xml", partial(get_sitemap, self))
 
         self.app.router.add_get(r"/projects/{project_name}", partial(get_project, self))
-        self.app.router.add_get(r"/projects/{project_name}/bg.png", partial(get_project_bg, self))
+        self.app.router.add_get(
+            r"/projects/{project_name}/bg.png", partial(get_project_bg, self)
+        )
 
-        for f in ["robots.txt", "tailwind.css", "gh.svg"]:
-            self.app.router.add_get(f"/{f}", get_file(f))
+        for f in [
+            "gh.svg",
+            "leaflet/layers-2x.png",
+            "leaflet/layers.png",
+            "leaflet/leaflet.css",
+            "leaflet/leaflet.js",
+            "leaflet/marker-icon-2x.png",
+            "leaflet/marker-icon.png",
+            "leaflet/marker-shadow.png",
+            "map.js",
+            "robots.txt",
+            "tailwind.css",
+            "video-js.css",
+            "video.min.js",
+        ]:
+            self.app.router.add_get(f"/{f}", get_file(f"static/{f}"))
 
-        for f in os.listdir("favicon"):
-            self.app.router.add_get(f"/{f}", get_file(f"favicon/{f}"))
+        for f in os.listdir("static/favicon"):
+            self.app.router.add_get(f"/{f}", get_file(f"static/favicon/{f}"))
 
 
 async def main():  # pragma: nocover

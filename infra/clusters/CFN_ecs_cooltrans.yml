@@ -1,44 +1,44 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Blog Service
+Description: Cooltrans Service
 
 Resources:
   ECSTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: cafetech
+      Family: cooltrans
       Cpu: 256
       Memory: 256
       NetworkMode: bridge
       RequiresCompatibilities:
         - EC2
       ExecutionRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/ecs-execution"
-      TaskRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-cafetech"
+      TaskRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-cooltrans"
       ContainerDefinitions:
-        - Name: cafetech
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cafetech:3a42bd5565e96a3b79f3d581d438267c14fef853"
+        - Name: cooltrans
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cooltrans:090e27f06a4cdf03a1562ebd6dffbbc33f772c2f"
           Essential: true
           PortMappings:
-            - ContainerPort: 8080
+            - ContainerPort: 8081
           LogConfiguration:
             LogDriver: awslogs
             Options:
               awslogs-create-group: true
-              awslogs-group: ecs-prod-cafetech
+              awslogs-group: ecs-prod-cooltrans
               awslogs-region: us-west-2
               awslogs-stream-prefix: ecs-logs
 
   ECSService:
     Type: AWS::ECS::Service
     Properties:
-      ServiceName: cafetech
+      ServiceName: cooltrans
       Cluster: prod
       TaskDefinition: !Ref ECSTaskDefinition
       LaunchType: EC2
       DesiredCount: 1
       LoadBalancers:
-      - ContainerName: cafetech
-        ContainerPort: 8080
-        TargetGroupArn: !Sub "arn:aws:elasticloadbalancing:us-west-2:${AWS::AccountId}:targetgroup/prod-tg/713a1f7cd9f72ad7"
+      - ContainerName: cooltrans
+        ContainerPort: 8081
+        TargetGroupArn: !Sub "arn:aws:elasticloadbalancing:us-west-2:${AWS::AccountId}:targetgroup/prod-cooltrans/bfb05e95cd9368a2"
 
 Outputs:
   ServiceName:

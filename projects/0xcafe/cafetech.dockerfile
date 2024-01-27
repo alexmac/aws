@@ -1,12 +1,12 @@
-FROM public.ecr.aws/debian/debian:unstable
+FROM public.ecr.aws/debian/debian:stable
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     ca-certificates \
-    wget \
+    dumb-init \
     python3 \
     python3-pip \
-    dumb-init \
+    wget \
     && apt-get clean
 
 RUN python3 -m pip install --break-system-packages -U pipenv
@@ -17,12 +17,9 @@ COPY Pipfile* ./
 RUN pipenv install
 
 COPY cafetech ./cafetech
-COPY favicon ./favicon
+COPY static ./static
 COPY templates ./templates
 COPY blog_server.py ./
-COPY robots.txt ./
-COPY tailwind.css ./
-COPY gh.svg ./
 
 ENV PYTHONPATH=.
 
