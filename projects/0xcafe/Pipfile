@@ -18,8 +18,8 @@ twine = "*"
 server = "python example/server.py"
 tidy = "bash -cxe 'isort . && black . && ruff .'"
 upload = "twine upload dist/*"
-css = "bunx tailwindcss -i ./tailwind.input.css -o ./static/tailwind.css"
-csswatch = "bunx tailwindcss -i ./tailwind.input.css -o ./static/tailwind.css --watch"
+css = "bunx tailwindcss -i ./tailwind.tw.css -o ./static/tailwind.css"
+csswatch = "bunx tailwindcss -i ./tailwind.tw.css -o ./static/tailwind.css --watch"
 
 [requires]
 python_version = "3.11"

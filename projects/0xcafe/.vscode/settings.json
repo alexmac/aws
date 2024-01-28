@@ -1,5 +1,11 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "editor.formatOnSave": true,
-    "debug.toolBarLocation": "commandCenter"
+    "debug.toolBarLocation": "commandCenter",
+    "files.associations": {
+        "*.tw.css": "twcss"
+    },
+    "[twcss]": {
+        "editor.formatOnSave": false
+    }
 }

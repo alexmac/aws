@@ -18,6 +18,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  {% for s in stylesheets %}
+  <link href="{{s}}" rel="stylesheet" />
+  {% endfor %}
 </head>
 
 <body>
@@ -30,12 +33,15 @@
         <li><a href="/projects/{{project}}">{{project}}</a></li>
         {% endfor %}
       </ul>
-      <a href="https://twitter.com/dralexmac">@dralexmac</a>
+      <span>@<a href="https://twitter.com/dralexmac">dralexmac</a></span>
     </div>
   </nav>
   <article>
     {% include '%s.html' % article_path %}
   </article>
+  {% for s in scripts %}
+  <script src="{{s}}"></script>
+  {% endfor %}
 </body>
 
 </html>

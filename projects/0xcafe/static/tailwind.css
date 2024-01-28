@@ -460,24 +460,43 @@ a {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 0.25rem;
   padding: 0.25rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   body {
-    display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-    grid-template-rows: repeat(12, minmax(0, 1fr));
+    grid-template-rows: max-content max-content auto;
   }
 }
 
+@media (min-width: 768px) {
+  body {
+    grid-template-rows: max-content auto;
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    grid-template-columns: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    grid-template-columns: minmax(max-content,10rem) auto;
+  }
+}
+
+body {
+  height: 100vh;
+}
+
 header {
-  height: -moz-fit-content;
-  height: fit-content;
+  grid-column: 1 / -1;
+  grid-column-start: 1;
   border-width: 1px;
   border-style: dotted;
   padding: 0.25rem;
@@ -485,43 +504,38 @@ header {
   line-height: 1.75rem;
 }
 
-@media (min-width: 768px) {
-  header {
-    grid-column: 1 / -1;
-    grid-column-start: 1;
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
 nav {
+  grid-column: span 1 / span 1;
+  grid-column-start: 1;
+  grid-row: span 1 / span 1;
+  grid-row-start: 2;
+  width: 100%;
   word-break: break-all;
   border-width: 1px;
   border-style: dotted;
   padding: 0.25rem;
 }
 
-@media (min-width: 768px) {
-  nav {
-    grid-column: span 2 / span 2;
-    grid-column-start: 1;
-    grid-row: 1 / -1;
-    grid-row-start: 2;
-  }
-}
-
 article {
+  grid-column: 1 / -1;
+  grid-row: span 1 / span 1;
+  width: 100%;
   overflow-wrap: break-word;
   border-width: 1px;
   border-style: dotted;
   padding: 0.25rem;
 }
 
+@media (max-width: 767px) {
+  article {
+    grid-column-start: 1;
+    grid-row-start: 3;
+  }
+}
+
 @media (min-width: 768px) {
   article {
-    grid-column: 1 / -1;
-    grid-column-start: 3;
-    grid-row: 1 / -1;
+    grid-column-start: 2;
     grid-row-start: 2;
   }
 }
@@ -676,17 +690,10 @@ article {
 }
 
 #cooltransarticle {
+  grid-column-start: 1;
+  grid-row-start: 2;
   border-width: 0px;
   padding: 1rem;
-}
-
-@media (min-width: 768px) {
-  #cooltransarticle {
-    grid-column: 1 / -1;
-    grid-column-start: 1;
-    grid-row: 1 / -1;
-    grid-row-start: 2;
-  }
 }
 
 #leafletmap {

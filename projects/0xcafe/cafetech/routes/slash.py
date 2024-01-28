@@ -17,4 +17,6 @@ async def get_slash(s: BlogServer, request):
         "projects": sorted(valid_project_names),
         "opengraph": dict(),
         "meta_tags": {"description": "An old fashioned website."},
+        "stylesheets": ["/breakout.css"],
+        "scripts": ["/breakout.js"],
     }

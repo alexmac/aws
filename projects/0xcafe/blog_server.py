@@ -35,6 +35,7 @@ async def security_headers(request: Request, handler: Handler):
     resp.headers[
         "permissions-policy"
     ] = "accelerometer=(), autoplay=(self), camera=(), fullscreen=(self), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), payment=(), sync-xhr=()"
+    resp.headers["cache-control"] = "public, max-age=10, stale-while-revalidate=600"
     return resp
 
 
@@ -53,6 +54,9 @@ class BlogServer(Server):
         )
 
         for f in [
+            "breakout-worker.js",
+            "breakout.css",
+            "breakout.js",
             "gh.svg",
             "leaflet/layers-2x.png",
             "leaflet/layers.png",

@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h1 {
+        @apply text-2xl;
+    }
+
+    h2 {
+        @apply text-xl;
+    }
+
+    a {
+        @apply underline underline-offset-2
+    }
+
+    body {
+        @apply font-mono gap-1 p-1 grid;
+        @apply sm:grid-rows-[max-content_max-content_auto];
+        @apply md:grid-rows-[max-content_auto];
+        @apply sm:grid-cols-[auto];
+        @apply md:grid-cols-[minmax(max-content,10rem)_auto];
+        height: 100vh;
+    }
+
+    header {
+        @apply p-1 text-lg border border-dotted col-start-1 col-span-full;
+    }
+
+    nav {
+        @apply p-1 border border-dotted break-all col-start-1 col-span-1 row-start-2 row-span-1 w-full;
+    }
+
+    article {
+        @apply p-1 border border-dotted break-words col-span-full row-span-1 w-full;
+        @apply sm:col-start-1 sm:row-start-3;
+        @apply md:col-start-2 md:row-start-2;
+    }
+}
+
+#cooltransarticle {
+    @apply p-4 border-0 col-start-1 row-start-2;
+}
+
+#leafletmap {
+    height: 240px;
+    @apply w-full;
+}
