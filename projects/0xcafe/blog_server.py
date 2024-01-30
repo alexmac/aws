@@ -29,12 +29,12 @@ def get_file(fn: str):
 @middleware
 async def security_headers(request: Request, handler: Handler):
     resp = await handler(request)
-    resp.headers[
-        "content-security-policy"
-    ] = "default-src 'self'; script-src 'self'; media-src 'self' blob: ; worker-src 'self' blob: ; style-src 'self' 'unsafe-inline'; font-src 'self' data: ; img-src 'self' data: https://tile.openstreetmap.org ;"
-    resp.headers[
-        "permissions-policy"
-    ] = "accelerometer=(), autoplay=(self), camera=(), fullscreen=(self), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), payment=(), sync-xhr=()"
+    resp.headers["content-security-policy"] = (
+        "default-src 'self'; script-src 'self'; media-src 'self' blob: ; worker-src 'self' blob: ; style-src 'self' 'unsafe-inline'; font-src 'self' data: ; img-src 'self' data: https://tile.openstreetmap.org ;"
+    )
+    resp.headers["permissions-policy"] = (
+        "accelerometer=(), autoplay=(self), camera=(), fullscreen=(self), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), payment=(), sync-xhr=()"
+    )
     resp.headers["cache-control"] = "public, max-age=10, stale-while-revalidate=600"
     return resp
 
