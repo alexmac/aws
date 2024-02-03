@@ -15,7 +15,7 @@ Resources:
       TaskRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-cooltrans"
       ContainerDefinitions:
         - Name: cooltrans
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cooltrans:967ad29e9c1b48b610dfcfd5042a5b79b4c1256f"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cooltrans:00a242a867a67860f7d3f204dbd1287e2a779215"
           Essential: true
           PortMappings:
             - ContainerPort: 8081

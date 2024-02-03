@@ -16,9 +16,11 @@ fetch('/api/cooltrans/cctv/locations')
             const location = json.locations[key];
             const longitude = parseFloat(location.longitude);
             const latitude = parseFloat(location.latitude);
+            const simple_name = location.simple_name;
+            const friendly_name = location.friendly_name;
 
             var m = L.marker([latitude, longitude], {
-                "title": key
+                "title": friendly_name
             })
 
             m.on('click', function () {
@@ -30,6 +32,10 @@ fetch('/api/cooltrans/cctv/locations')
                             type: "application/x-mpegURL",
                         }
                     })
+
+                    var url = new URL(window.location.href);
+                    url.pathname = `/cooltrans/${simple_name}`
+                    history.pushState(null, document.title, url.toString());
                 }
             })
 
