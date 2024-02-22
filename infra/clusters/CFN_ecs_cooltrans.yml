@@ -35,6 +35,9 @@ Resources:
       TaskDefinition: !Ref ECSTaskDefinition
       LaunchType: EC2
       DesiredCount: 1
+      PlacementStrategies:
+      - Field: MEMORY
+        Type: binpack
       LoadBalancers:
       - ContainerName: cooltrans
         ContainerPort: 8081

@@ -30,6 +30,10 @@ Resources:
         IamInstanceProfile:
           Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/tailscale"
         EbsOptimized: true
+        PrivateDnsNameOptions:
+          EnableResourceNameDnsAAAARecord: False
+          EnableResourceNameDnsARecord: True
+          HostnameType: resource-name
         MetadataOptions:
           HttpTokens: required
         Monitoring:
@@ -63,5 +67,5 @@ Resources:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
       MinSize: '1'
-      MaxSize: '2'
+      MaxSize: '3'
       DesiredCapacity: '1'

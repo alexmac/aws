@@ -12,11 +12,15 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
-        ImageId: ami-0fb7b02222023af45
+        ImageId: ami-0ffa72fc340edace0
         InstanceType: t4g.small
         IamInstanceProfile:
           Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/server"
         EbsOptimized: true
+        PrivateDnsNameOptions:
+          EnableResourceNameDnsAAAARecord: False
+          EnableResourceNameDnsARecord: True
+          HostnameType: resource-name
         MetadataOptions:
           HttpTokens: required
         Monitoring:
@@ -61,6 +65,24 @@ Resources:
       LaunchTemplate:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      NewInstancesProtectedFromScaleIn: True
+      InstanceMaintenancePolicy:
+        MaxHealthyPercentage: 200
+        MinHealthyPercentage: 100
       MinSize: '1'
-      MaxSize: '5'
+      MaxSize: '3'
       DesiredCapacity: '1'
+
+  ECSCapacityProvider:
+    Type: AWS::ECS::CapacityProvider
+    Properties:
+      AutoScalingGroupProvider:
+        AutoScalingGroupArn: !Ref ASG
+        ManagedScaling:
+          Status: ENABLED
+          TargetCapacity: 100
+          MinimumScalingStepSize: 1
+          MaximumScalingStepSize: 2
+        ManagedTerminationProtection: ENABLED
+        ManagedDraining: ENABLED
+      Name: prod-capacityprovider
