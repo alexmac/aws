@@ -16,6 +16,7 @@ Resources:
       Path: '/'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy
+      - !Sub "arn:aws:iam::${AWS::AccountId}:policy/ssh-host-key-sign"
       Policies:
       - PolicyName: secret-access
         PolicyDocument:
