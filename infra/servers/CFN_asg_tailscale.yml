@@ -25,7 +25,7 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
-        ImageId: ami-01036d51587ce69c5
+        ImageId: ami-03ba386fab56f6932
         InstanceType: t4g.micro
         IamInstanceProfile:
           Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/tailscale"
@@ -47,7 +47,7 @@ Resources:
             - Key: Name
               Value: tailscale
         BlockDeviceMappings:
-        - DeviceName: /dev/xvda 
+        - DeviceName: /dev/sda1
           Ebs: 
             DeleteOnTermination: true
             Encrypted: true

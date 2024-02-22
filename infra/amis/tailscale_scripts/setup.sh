@@ -17,11 +17,13 @@ pip3 install -U --break-system-packages \
 	awscli
 
 aws configure set default.region us-west-2
-# aws configure set default.credential_source Ec2InstanceMetadata
 
 source /usr/local/ami_setup/tailscale_scripts/ssh-harden.sh
 
 cp /usr/local/ami_setup/tailscale_scripts/startup.service /etc/systemd/system/
+cp /usr/local/ami_setup/tailscale_scripts/sign-ssh-host-key.service /etc/systemd/system/
+cp /usr/local/ami_setup/tailscale_scripts/sign-ssh-host-key.timer /etc/systemd/system/
+cp /usr/local/ami_setup/tailscale_scripts/01-cloud-init-custom.cfg /etc/cloud/cloud.cfg.d/
 
 # Tailscale
 echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
@@ -36,3 +38,5 @@ chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
 curl -fsSL https://tailscale.com/install.sh | sh
 
 systemctl enable startup
+systemctl enable sign-ssh-host-key.service
+systemctl enable sign-ssh-host-key.timer

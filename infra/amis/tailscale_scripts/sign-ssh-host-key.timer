@@ -1,0 +1,11 @@
+[Unit]
+Description=Re-signs the ssh host key
+Requires=sign-ssh-host-key.service
+
+[Timer]
+Unit=sign-ssh-host-key.service
+AccuracySec=1h
+OnCalendar=00/4:00:00
+
+[Install]
+WantedBy=timers.target

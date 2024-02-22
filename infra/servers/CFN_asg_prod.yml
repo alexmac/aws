@@ -12,7 +12,7 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
-        ImageId: ami-0aed6e0b56c92c057
+        ImageId: ami-0fb7b02222023af45
         InstanceType: t4g.small
         IamInstanceProfile:
           Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/server"
@@ -62,5 +62,5 @@ Resources:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
       MinSize: '1'
-      MaxSize: '2'
+      MaxSize: '5'
       DesiredCapacity: '1'

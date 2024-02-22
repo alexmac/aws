@@ -1,20 +1,18 @@
 ################################################################################
-# startup.service
+# SSH Host Key Signing
 ################################################################################
 
 [Unit]
-Before=docker.service ecs.service sshd.service
-Wants=docker.service ecs.service sshd.service
+Before=sshd.service
+Wants=sshd.service
 After=cloud-init.service
-Description=Runs startup.sh
-  
+Description=Runs SSH Host Key Signing
+
 [Service]
-Type=simple
+Type=oneshot
 User=root
 Group=root
-ExecStart=/usr/local/ami_setup/server_scripts/startup.sh
-Restart=on-failure
-
+ExecStart=/usr/local/ami_setup/server_scripts/sign-ssh-host-key.sh
 
 [Install]
 WantedBy=multi-user.target

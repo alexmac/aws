@@ -17,6 +17,7 @@ Resources:
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
       - arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy
+      - !Sub "arn:aws:iam::${AWS::AccountId}:policy/ssh-host-key-sign"
 
   InstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
