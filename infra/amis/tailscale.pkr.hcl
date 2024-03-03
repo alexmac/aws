@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     amazon = {
-      version = ">= 1.2.9"
+      version = ">= 1.3.0"
       source  = "github.com/hashicorp/amazon"
     }
   }
@@ -10,7 +10,7 @@ packer {
 data "amazon-ami" "latest-ubuntu" {
   filters = {
     virtualization-type = "hvm"
-    name                = "ubuntu/images/hvm-ssd/ubuntu-lunar-*-arm64-server-*"
+    name                = "ubuntu/images/hvm-ssd-gp3/ubuntu-mantic-*-arm64-server-*"
     root-device-type    = "ebs"
   }
   owners      = ["099720109477"]
@@ -24,8 +24,10 @@ source "amazon-ebs" "tailscale" {
   subnet_id            = "subnet-05c2105bfad11abf9"
   instance_type        = "t4g.small"
   ssh_username         = "ubuntu"
-  security_group_id    = "sg-081613d174e1f8e8b" # the public ssh access group for now
+  ssh_interface        = "private_ip"
+  security_group_id    = "sg-0c421753140d394d3" # tailscale ssh access
   imds_support         = "v2.0"
+  encrypt_boot         = true
   ami_name             = "tailscale {{timestamp}}"
   iam_instance_profile = "tailscale"
 }
@@ -46,5 +48,10 @@ build {
 
   provisioner "shell" {
     inline = ["sudo rm -rf /tmp/*"]
+  }
+
+  post-processor "manifest" {
+    output     = "output/tailscale_manifest.json"
+    strip_path = true
   }
 }

@@ -12,7 +12,7 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateData:
-        ImageId: ami-0ffa72fc340edace0
+        ImageId: resolve:ssm:/amis/server
         InstanceType: t4g.small
         IamInstanceProfile:
           Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/server"

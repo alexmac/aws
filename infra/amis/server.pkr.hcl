@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     amazon = {
-      version = ">= 1.2.9"
+      version = ">= 1.3.0"
       source  = "github.com/hashicorp/amazon"
     }
   }
@@ -24,8 +24,10 @@ source "amazon-ebs" "server" {
   subnet_id            = "subnet-05c2105bfad11abf9"
   instance_type        = "t4g.small"
   ssh_username         = "ec2-user"
-  security_group_id    = "sg-081613d174e1f8e8b" # the public ssh access group for now
+  ssh_interface        = "private_ip"
+  security_group_id    = "sg-0c421753140d394d3" # tailscale ssh access
   imds_support         = "v2.0"
+  encrypt_boot         = true
   ami_name             = "server {{timestamp}}"
   iam_instance_profile = "server"
 }
@@ -46,5 +48,10 @@ build {
 
   provisioner "shell" {
     inline = ["sudo rm -rf /tmp/*"]
+  }
+
+  post-processor "manifest" {
+    output     = "output/server_manifest.json"
+    strip_path = true
   }
 }
