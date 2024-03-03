@@ -72,7 +72,7 @@ Resources:
               - Effect: "Allow"
                 Action:
                 - ssm:PutParameter
-                Resource: !Sub "arn:aws:ssm:${AWS::AccountId}:${AWS::AccountId}:parameter/amis/*"
+                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/amis/*"
 
 Outputs:
   RoleARN:
