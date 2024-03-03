@@ -11,15 +11,13 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: ec2.amazonaws.com
+              Service: ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
           - Effect: Allow
             Principal:
               AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
             Action: sts:AssumeRole
       Path: "/"
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: PackerAMIManagementPolicy
           PolicyDocument:
@@ -56,6 +54,7 @@ Resources:
                 - ec2:DescribeTags
                 - ec2:DescribeVolumes
                 - ec2:DetachVolume
+                - ec2:EnableImageDeprecation
                 - ec2:GetPasswordData
                 - ec2:ModifyImageAttribute
                 - ec2:ModifyInstanceAttribute
@@ -66,6 +65,14 @@ Resources:
                 - ec2:TerminateInstances
                 - iam:GetInstanceProfile
                 Resource: "*"
+        - PolicyName: SSMupdates
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: "Allow"
+                Action:
+                - ssm:PutParameter
+                Resource: !Sub "arn:aws:ssm:${AWS::AccountId}:${AWS::AccountId}:parameter/amis/*"
 
 Outputs:
   RoleARN:

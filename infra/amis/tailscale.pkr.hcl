@@ -1,4 +1,6 @@
 packer {
+  required_version = ">= 1.10.0"
+
   required_plugins {
     amazon = {
       version = ">= 1.3.0"
@@ -30,6 +32,7 @@ source "amazon-ebs" "tailscale" {
   encrypt_boot         = true
   ami_name             = "tailscale {{timestamp}}"
   iam_instance_profile = "tailscale"
+  deprecate_at         = timeadd(timestamp(), "240h")
 }
 
 build {

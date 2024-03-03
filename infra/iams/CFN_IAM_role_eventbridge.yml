@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM Role for Packer to Create AMI
+
+Resources:
+  EventbridgeSchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: eventbridge-scheduler
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                "aws:SourceAccount": !Sub "${AWS::AccountId}"
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                "aws:SourceAccount": !Sub "${AWS::AccountId}"
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                "aws:SourceAccount": !Sub "${AWS::AccountId}"
+      Path: "/"
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AmazonEventBridgeSchedulerFullAccess
+      Policies:
+        - PolicyName: Logs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: "Allow"
+                Action:
+                - logs:CreateLogGroup
+                Resource: '*'
+        - PolicyName: RunTasks
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: "Allow"
+                Action:
+                - ecs:RunTask
+                Resource: '*'
+              - Effect: "Allow"
+                Action:
+                - iam:PassRole
+                Resource: '*'
+                Condition:
+                  StringLike:
+                    "iam:PassedToService": "ecs-tasks.amazonaws.com"
+              - Effect: "Allow"
+                Action:
+                - ecs:TagResource
+                Resource: '*'
+                Condition:
+                  StringLike:
+                    "ecs:CreateAction":
+                    - "RunTask"

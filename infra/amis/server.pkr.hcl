@@ -1,4 +1,6 @@
 packer {
+  required_version = ">= 1.10.0"
+
   required_plugins {
     amazon = {
       version = ">= 1.3.0"
@@ -30,6 +32,7 @@ source "amazon-ebs" "server" {
   encrypt_boot         = true
   ami_name             = "server {{timestamp}}"
   iam_instance_profile = "server"
+  deprecate_at         = timeadd(timestamp(), "240h")
 }
 
 build {
