@@ -18,7 +18,7 @@ Resources:
         OperatingSystemFamily : LINUX
       ContainerDefinitions:
         - Name: packer
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:045e50d975edde0d78cf0aa52900733d71233311"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:a0c494d4712824536f10c23bb5e40747013effcf"
           Essential: true
           Command:
           - make
@@ -72,7 +72,7 @@ Resources:
         OperatingSystemFamily : LINUX
       ContainerDefinitions:
         - Name: packer
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:045e50d975edde0d78cf0aa52900733d71233311"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:a0c494d4712824536f10c23bb5e40747013effcf"
           Essential: true
           Command:
           - make

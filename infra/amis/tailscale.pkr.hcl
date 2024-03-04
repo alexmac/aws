@@ -33,6 +33,13 @@ source "amazon-ebs" "tailscale" {
   ami_name             = "tailscale {{timestamp}}"
   iam_instance_profile = "tailscale"
   deprecate_at         = timeadd(timestamp(), "240h")
+  ami_description      = "created from ${data.amazon-ami.latest-ubuntu.id}"
+  run_tags = {
+    Name = "tailscale {{timestamp}}"
+  }
+  snapshot_tags = {
+    Name = "tailscale {{timestamp}}"
+  }
 }
 
 build {

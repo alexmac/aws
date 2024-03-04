@@ -33,6 +33,13 @@ source "amazon-ebs" "server" {
   ami_name             = "server {{timestamp}}"
   iam_instance_profile = "server"
   deprecate_at         = timeadd(timestamp(), "240h")
+  ami_description      = "created from ${data.amazon-ami.latest-al2023.id}"
+  run_tags = {
+    Name = "server {{timestamp}}"
+  }
+  snapshot_tags = {
+    Name = "server {{timestamp}}"
+  }
 }
 
 build {
