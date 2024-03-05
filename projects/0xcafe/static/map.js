@@ -28,13 +28,13 @@ fetch('/api/cooltrans/cctv/locations')
                 if (videoElement) {
                     player.loadMedia({
                         src: {
-                            src: "/api/cooltrans/proxy" + location.stream + "/playlist.m3u8",
+                            src: "/api/cooltrans/proxy/" + location.source + location.stream + "/playlist.m3u8",
                             type: "application/x-mpegURL",
                         }
                     })
 
                     var url = new URL(window.location.href);
-                    url.pathname = `/cooltrans/${simple_name}`
+                    url.pathname = `/cooltrans/${location.source}/${simple_name}`
                     history.pushState(null, document.title, url.toString());
                 }
             })

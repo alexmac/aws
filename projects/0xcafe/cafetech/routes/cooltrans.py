@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-import aiohttp
 
+import aiohttp
 import aiohttp_jinja2
-from aiohttp.web import Request, Response
+from aiohttp.web import HTTPBadRequest, Request
 
 if TYPE_CHECKING:
     from blog_server import BlogServer
@@ -15,6 +15,7 @@ async def get_cooltrans(s: BlogServer, req: Request):
     friendly_name = "3 / Tahoe City / Hwy 89 at Alpine Meadows"
     simple_name = "3-TahoeCity-Hwy89atAlpineMeadows"
     stream = "/D3/89_Alpine_Meadows_PLA89_NB.stream"
+    source = req.match_info.get("source", "caltrans")
     if loc := req.match_info.get("loc"):
         async with aiohttp.ClientSession().get(
             "https://0xcafe.tech/api/cooltrans/cctv/locations"
@@ -26,10 +27,13 @@ async def get_cooltrans(s: BlogServer, req: Request):
         simple_name = loc_info["simple_name"]
         stream = loc_info["stream"]
 
+    if source not in {"caltrans", "ndot"}:
+        raise HTTPBadRequest()
+
     return {
         "opengraph": dict(),
         "friendly_name": friendly_name,
         "simple_name": simple_name,
-        "stream": stream,
+        "stream": source + stream,
         "meta_tags": {"description": f"Caltrans CCTV: {friendly_name}"},
     }

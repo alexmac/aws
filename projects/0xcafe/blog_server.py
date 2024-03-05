@@ -9,7 +9,9 @@ from typing import List, Optional
 import aiohttp_jinja2
 import jinja2
 from aiohttp.typedefs import Handler, Middleware
-from aiohttp.web import FileResponse, Request, middleware
+from aiohttp.web import Request, middleware
+from alxhttp.file import get_file
+from alxhttp.headers import content_security_policy, permissions_policy
 from alxhttp.middleware import default_middleware
 from alxhttp.server import Server
 
@@ -19,22 +21,29 @@ from cafetech.routes.sitemap import get_sitemap
 from cafetech.routes.slash import get_slash
 
 
-def get_file(fn: str):
-    async def handler(_):
-        return FileResponse(fn)
-
-    return handler
-
-
 @middleware
 async def security_headers(request: Request, handler: Handler):
     resp = await handler(request)
-    resp.headers[
-        "content-security-policy"
-    ] = "default-src 'self'; script-src 'self'; media-src 'self' blob: ; worker-src 'self' blob: ; style-src 'self' 'unsafe-inline'; font-src 'self' data: ; img-src 'self' data: https://tile.openstreetmap.org ;"
-    resp.headers[
-        "permissions-policy"
-    ] = "accelerometer=(), autoplay=(self), camera=(), fullscreen=(self), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), payment=(), sync-xhr=()"
+
+    resp.headers["content-security-policy"] = content_security_policy(
+        default_src=["self"],
+        style_src=["self", "unsafe-inline"],
+        font_src=["self", "data:"],
+        media_src=["self", "blob:"],
+        object_src=["none"],
+        img_src=[
+            "self",
+            "data:",
+            "https://tile.openstreetmap.org",
+        ],
+        worker_src=["self", "blob:"],
+    )
+
+    resp.headers["permissions-policy"] = permissions_policy(
+        autoplay=["self"],
+        fullscreen=["self"],
+    )
+
     resp.headers["cache-control"] = "public, max-age=10, stale-while-revalidate=600"
     return resp
 
@@ -46,7 +55,7 @@ class BlogServer(Server):
         self.app.router.add_get(r"/", partial(get_slash, self))
         self.app.router.add_get(r"/cooltrans", partial(get_cooltrans, self))
         self.app.router.add_get(
-            r"/cooltrans/{loc:[0-9a-zA-Z_-]+}", partial(get_cooltrans, self)
+            r"/cooltrans/{source}/{loc:[0-9a-zA-Z_-]+}", partial(get_cooltrans, self)
         )
 
         self.app.router.add_get(r"/sitemap.xml", partial(get_sitemap, self))

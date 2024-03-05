@@ -15,7 +15,7 @@ Resources:
       TaskRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-cafetech"
       ContainerDefinitions:
         - Name: cafetech
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cafetech:b26fdb9db200547c448f29848136859647f119d4"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-west-2.amazonaws.com/staging/cafetech:d7f3cd0ac4b4791371f8ff11ed8803901e15b033"
           Essential: true
           PortMappings:
             - ContainerPort: 8080
