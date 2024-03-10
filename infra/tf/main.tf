@@ -91,8 +91,8 @@ module "services" {
   ecs_execution_role_arn = module.ecs_shared.ecs_execution_role_arn
 }
 
-
-moved {
-  from = module.services.aws_lb_listener.default_listener
-  to   = module.services.aws_lb_listener.prod_alb
+module "cloudfront" {
+  source     = "./cloudfront"
+  account_id = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.name
 }
