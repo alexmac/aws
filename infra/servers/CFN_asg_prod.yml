@@ -49,6 +49,10 @@ Resources:
           Tags: 
             - Key: Name
               Value: server
+        - ResourceType: volume
+          Tags:
+            - Key: Name
+              Value: server
         BlockDeviceMappings:
         - DeviceName: /dev/xvda 
           Ebs: 

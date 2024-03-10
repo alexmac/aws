@@ -50,6 +50,10 @@ Resources:
           Tags: 
             - Key: Name
               Value: tailscale
+        - ResourceType: volume
+          Tags:
+            - Key: Name
+              Value: tailscale
         BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs: 

@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Packer infra
 
+Parameters:
+  dockerImage:
+    Type: String
+    Default: 13a6afa0fd1b1a342d52ba0aed240c961b52b489
+
 Resources:
   ECSPackerServer:
     Type: AWS::ECS::TaskDefinition
@@ -18,7 +23,7 @@ Resources:
         OperatingSystemFamily : LINUX
       ContainerDefinitions:
         - Name: packer
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:a0c494d4712824536f10c23bb5e40747013effcf"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:${dockerImage}"
           Essential: true
           Command:
           - make
@@ -47,7 +52,7 @@ Resources:
           LaunchType: FARGATE
           NetworkConfiguration:
             AwsvpcConfiguration:
-              AssignPublicIp: ENABLED
+              AssignPublicIp: DISABLED
               SecurityGroups: 
               - sg-0cd97e29b526f91ab
               Subnets: 
@@ -72,7 +77,7 @@ Resources:
         OperatingSystemFamily : LINUX
       ContainerDefinitions:
         - Name: packer
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:a0c494d4712824536f10c23bb5e40747013effcf"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/staging/packer:${dockerImage}"
           Essential: true
           Command:
           - make
