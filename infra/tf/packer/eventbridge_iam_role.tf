@@ -66,12 +66,21 @@ resource "aws_iam_role" "eventbridge_scheduler" {
       Statement = [
         {
           Effect   = "Allow"
-          Action   = ["ecs:RunTask", "iam:PassRole", "ecs:TagResource"]
+          Action   = ["ecs:RunTask",]
+          Resource = "*"
+          Condition = {
+            ArnLike = {
+              "ecs:cluster" = aws_ecs_cluster.packer.arn
+            }
+          }
+        },
+        {
+          Effect   = "Allow"
+          Action   = "iam:PassRole"
           Resource = "*"
           Condition = {
             StringLike = {
-              "iam:PassedToService" = "ecs-tasks.amazonaws.com",
-              "ecs:CreateAction"    = "RunTask"
+              "iam:PassedToService" = "ecs-tasks.amazonaws.com"
             }
           }
         }
