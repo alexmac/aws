@@ -16,14 +16,17 @@ resource "aws_cloudwatch_log_group" "log_group" {
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
-    effect = "Allow"
-
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
     principals {
       type        = "Service"
       identifiers = ["vpc-flow-logs.amazonaws.com"]
     }
-
-    actions = ["sts:AssumeRole"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.account_id]
+    }
   }
 }
 

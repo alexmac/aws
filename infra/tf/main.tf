@@ -33,7 +33,8 @@ module "vpc" {
 }
 
 module "ecs_shared" {
-  source = "./ecs_shared"
+  source     = "./ecs_shared"
+  account_id = data.aws_caller_identity.current.account_id
 }
 
 module "tailscale" {

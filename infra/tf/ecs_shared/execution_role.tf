@@ -6,6 +6,11 @@ data "aws_iam_policy_document" "ecs_execution_role_policy" {
       type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.account_id]
+    }
   }
 }
 

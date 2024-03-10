@@ -1,25 +1,31 @@
+data "aws_iam_policy_document" "cooltrans_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.account_id]
+    }
+  }
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${var.account_id}:root"]
+    }
+  }
+}
+
 resource "aws_iam_role" "service_cooltrans" {
-  name = "service-cooltrans"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      },
-      {
-        Effect = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::${var.account_id}:root"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-  path = "/"
+  name               = "service-cooltrans"
+  assume_role_policy = data.aws_iam_policy_document.cooltrans_assume_role.json
+  path               = "/"
 }
 
 resource "aws_lb_target_group" "cooltrans_target_group" {

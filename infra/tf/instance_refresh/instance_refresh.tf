@@ -1,18 +1,23 @@
+data "aws_iam_policy_document" "instancerefresh_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.account_id]
+    }
+  }
+}
+
 resource "aws_iam_role" "instancerefresh_role" {
-  name = "instancerefresh"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      },
-    ]
-  })
-  path = "/"
+  name               = "instancerefresh"
+  assume_role_policy = data.aws_iam_policy_document.instancerefresh_assume_role.json
+  path               = "/"
 
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",

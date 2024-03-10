@@ -4,30 +4,7 @@ data "aws_iam_policy_document" "eventbridge_scheduler_assume_role" {
     effect  = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
-
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_id}:root"]
-    }
-  }
-
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["scheduler.amazonaws.com", "events.amazonaws.com"]
+      identifiers = ["ecs-tasks.amazonaws.com", "scheduler.amazonaws.com", "events.amazonaws.com"]
     }
     condition {
       test     = "StringEquals"
@@ -66,7 +43,7 @@ resource "aws_iam_role" "eventbridge_scheduler" {
       Statement = [
         {
           Effect   = "Allow"
-          Action   = ["ecs:RunTask",]
+          Action   = ["ecs:RunTask", ]
           Resource = "*"
           Condition = {
             ArnLike = {
