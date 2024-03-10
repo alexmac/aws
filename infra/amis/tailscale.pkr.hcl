@@ -23,11 +23,15 @@ source "amazon-ebs" "tailscale" {
   region               = "us-west-2"
   profile              = "packer"
   source_ami           = data.amazon-ami.latest-ubuntu.id
-  subnet_id            = "subnet-05c2105bfad11abf9"
+  subnet_id            = "subnet-094aa23f1f145f81a"
   instance_type        = "t4g.small"
   ssh_username         = "ubuntu"
   ssh_interface        = "private_ip"
-  security_group_id    = "sg-0c421753140d394d3" # tailscale ssh access
+  security_group_ids = [
+    "sg-0f33b9d9f0b048328", # packer-instance
+    "sg-0fe92a5c593a480c2", # packer-fargate-ssh
+    "sg-06315c442e768445b", # tailscale-ssh-access
+  ]
   imds_support         = "v2.0"
   encrypt_boot         = true
   ami_name             = "tailscale {{timestamp}}"

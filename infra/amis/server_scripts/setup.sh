@@ -12,7 +12,7 @@ yum update
 yum install -y \
 	docker jq ec2-instance-connect python3-pip \
 	htop git ecs-init vim aws-nitro-enclaves-cli \
-	aws-nitro-enclaves-cli-devel wget
+	aws-nitro-enclaves-cli-devel wget dnsutils
 
 pip3 install -U \
 	awscli
