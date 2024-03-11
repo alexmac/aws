@@ -1,3 +1,8 @@
+resource "aws_cloudwatch_log_group" "server_logs" {
+  name              = "/ecs/${aws_ecs_cluster.packer.name}/server"
+  retention_in_days = 7
+}
+
 resource "aws_ecs_task_definition" "packer_server_task_def" {
   family                   = "packer-server"
   cpu                      = "256"
@@ -19,14 +24,20 @@ resource "aws_ecs_task_definition" "packer_server_task_def" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-create-group"  = "true"
-          "awslogs-group"         = "ecs-packer-server"
+          "awslogs-group"         = aws_cloudwatch_log_group.server_logs.name
           "awslogs-region"        = "${var.region}"
           "awslogs-stream-prefix" = "ecs-logs"
         }
       }
     }
   ])
+}
+
+module "eventbridge_scheduler_server_role" {
+  source          = "../modules/iams/eventbridge/ecs_runtask_target"
+  account_id      = var.account_id
+  name            = "packer-server"
+  ecs_cluster_arn = aws_ecs_cluster.packer.arn
 }
 
 resource "aws_scheduler_schedule" "server_ami_schedule" {
@@ -42,7 +53,7 @@ resource "aws_scheduler_schedule" "server_ami_schedule" {
 
   target {
     arn      = aws_ecs_cluster.packer.arn
-    role_arn = aws_iam_role.eventbridge_scheduler.arn
+    role_arn = module.eventbridge_scheduler_server_role.arn
 
     ecs_parameters {
       launch_type = "FARGATE"

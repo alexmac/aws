@@ -1,30 +1,12 @@
-data "aws_iam_policy_document" "packer_assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com", "scheduler.amazonaws.com", "events.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_id}:root"]
-    }
-  }
+module "packer_assume_role" {
+  source     = "../modules/iams/assume_role"
+  account_id = var.account_id
+  services   = ["ecs-tasks.amazonaws.com"]
 }
 
 resource "aws_iam_role" "packer" {
   name               = "packer"
-  assume_role_policy = data.aws_iam_policy_document.packer_assume_role.json
+  assume_role_policy = module.packer_assume_role.policy_document
   path               = "/"
 
   inline_policy {

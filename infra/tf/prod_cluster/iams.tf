@@ -1,22 +1,12 @@
-data "aws_iam_policy_document" "ec2_assume_role_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
+module "ec2_assume_role" {
+  source     = "../modules/iams/assume_role"
+  account_id = var.account_id
+  services   = ["ec2.amazonaws.com"]
 }
 
 resource "aws_iam_role" "server_ec2_role" {
   name               = "server"
-  assume_role_policy = data.aws_iam_policy_document.ec2_assume_role_policy.json
+  assume_role_policy = module.ec2_assume_role.policy_document
   path               = "/"
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
@@ -30,4 +20,3 @@ resource "aws_iam_instance_profile" "server_ec2_instance_profile" {
   path = "/"
   role = aws_iam_role.server_ec2_role.name
 }
-

@@ -1,35 +1,12 @@
-data "aws_iam_policy_document" "ec2_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-    effect = "Allow"
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "tailscale_secret_access" {
-  statement {
-    actions = [
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret",
-    ]
-    resources = [
-      "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:tailscale-IglZn3"
-    ]
-    effect = "Allow"
-  }
+module "tailscale_assume_role" {
+  source     = "../modules/iams/assume_role"
+  account_id = var.account_id
+  services   = ["ec2.amazonaws.com"]
 }
 
 resource "aws_iam_role" "tailscale_ec2_role" {
   name               = "tailscale-tf"
-  assume_role_policy = data.aws_iam_policy_document.ec2_assume_role_policy.json
+  assume_role_policy = module.tailscale_assume_role.policy_document
   path               = "/"
 
   managed_policy_arns = [
@@ -38,8 +15,22 @@ resource "aws_iam_role" "tailscale_ec2_role" {
   ]
 
   inline_policy {
-    name   = "secret-access"
-    policy = data.aws_iam_policy_document.tailscale_secret_access.json
+    name = "secret-access"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "secretsmanager:GetSecretValue",
+            "secretsmanager:DescribeSecret",
+          ]
+          Resource = [
+            "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:tailscale-IglZn3"
+          ]
+          Effect = "Allow"
+        },
+      ]
+    })
   }
 }
 

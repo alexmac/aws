@@ -14,45 +14,34 @@ resource "aws_cloudwatch_log_group" "log_group" {
   retention_in_days = 7
 }
 
-data "aws_iam_policy_document" "assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["vpc-flow-logs.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
+module "flow_log_assume_role" {
+  source     = "../modules/iams/assume_role"
+  account_id = var.account_id
+  services   = ["vpc-flow-logs.amazonaws.com"]
 }
 
 resource "aws_iam_role" "flow_log_role" {
   name               = "vpc-flow-logs-${aws_vpc.vpc.id}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
-}
+  assume_role_policy = module.flow_log_assume_role.policy_document
+  path               = "/"
 
-data "aws_iam_policy_document" "flow_log_role_access" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams",
-    ]
-
-    resources = [aws_cloudwatch_log_group.log_group.arn]
+  inline_policy {
+    name = "logs"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect = "Allow"
+          Action = [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+            "logs:DescribeLogGroups",
+            "logs:DescribeLogStreams",
+          ]
+          Resource = [aws_cloudwatch_log_group.log_group.arn]
+        },
+      ]
+    })
   }
-}
-
-resource "aws_iam_role_policy" "flow_log_access_policy" {
-  name   = "log-access-policy"
-  role   = aws_iam_role.flow_log_role.id
-  policy = data.aws_iam_policy_document.flow_log_role_access.json
 }

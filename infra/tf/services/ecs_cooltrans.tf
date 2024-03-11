@@ -1,30 +1,12 @@
-data "aws_iam_policy_document" "cooltrans_assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_id}:root"]
-    }
-  }
+module "cooltrans_assume_role" {
+  source     = "../modules/iams/assume_role"
+  account_id = var.account_id
+  services   = ["ecs-tasks.amazonaws.com"]
 }
 
 resource "aws_iam_role" "service_cooltrans" {
   name               = "service-cooltrans"
-  assume_role_policy = data.aws_iam_policy_document.cooltrans_assume_role.json
+  assume_role_policy = module.cooltrans_assume_role.policy_document
   path               = "/"
 }
 
