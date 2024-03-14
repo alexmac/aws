@@ -17,7 +17,6 @@ resource "aws_lambda_function" "calambda" {
   function_name = "calambda-ssh-host-key-signing"
 
   role = "arn:aws:iam::${var.account_id}:role/calambda"
-  # handler = "index.handler" # This is required but not used for container image.
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids

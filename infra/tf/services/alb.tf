@@ -23,7 +23,15 @@ resource "aws_lb" "alb" {
     var.prod_alb_sg,
   ]
   subnets                    = var.public_subnet_ids
-  enable_deletion_protection = false
+  enable_deletion_protection = true
+
+  desync_mitigation_mode = "strictest"
+
+  drop_invalid_header_fields = true
+
+  enable_http2 = true
+
+  ip_address_type = "ipv4"
 
   tags = {
     Name = "prod-alb"

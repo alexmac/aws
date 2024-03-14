@@ -35,19 +35,9 @@ resource "aws_default_route_table" "default_route_table" {
 resource "aws_default_security_group" "default" {
   vpc_id = aws_vpc.vpc.id
 
-  ingress {
-    protocol  = -1
-    self      = true
-    from_port = 0
-    to_port   = 0
-  }
+  ingress = []
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  egress = []
 
   tags = {
     Name = "default for vpc ${var.vpc_name}"
@@ -64,6 +54,33 @@ resource "aws_default_network_acl" "default" {
     cidr_block = "0.0.0.0/0"
     from_port  = 0
     to_port    = 0
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 1
+    action     = "allow"
+    cidr_block = "172.31.0.0/16"
+    from_port  = 22
+    to_port    = 22
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 2
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 22
+    to_port    = 22
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 3
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 3389
+    to_port    = 3389
   }
 
   ingress {

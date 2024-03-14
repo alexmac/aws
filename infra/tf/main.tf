@@ -2,6 +2,20 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
+resource "aws_iam_account_password_policy" "strict" {
+  minimum_password_length        = 32
+  require_lowercase_characters   = true
+  require_numbers                = true
+  require_uppercase_characters   = true
+  allow_users_to_change_password = true
+  password_reuse_prevention      = 24
+}
+
+module "aws_support_role" {
+  source = "./modules/iams/aws_support_role"
+  account_id = data.aws_caller_identity.current.account_id
+}
+
 module "vpc" {
   source = "./vpc"
 
@@ -72,6 +86,12 @@ module "services" {
 
 module "cloudfront" {
   source     = "./cloudfront"
+  account_id = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.name
+}
+
+module "alerting" {
+  source     = "./alerting"
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
 }
