@@ -11,17 +11,23 @@ resource "aws_iam_account_password_policy" "strict" {
   password_reuse_prevention      = 24
 }
 
+module "kms_cloudtrailwatch" {
+  source     = "./modules/kms/logs"
+  region     = data.aws_region.current.name
+  account_id = data.aws_caller_identity.current.account_id
+}
+
 module "aws_support_role" {
-  source = "./modules/iams/aws_support_role"
+  source     = "./modules/iams/aws_support_role"
   account_id = data.aws_caller_identity.current.account_id
 }
 
 module "vpc-usw2-10-0" {
-  source = "./modules/vpc"
-  account_id = data.aws_caller_identity.current.account_id
-  region     = "us-west-2"
+  source         = "./modules/vpc"
+  account_id     = data.aws_caller_identity.current.account_id
+  region         = "us-west-2"
   class_b_prefix = "10.0"
-  vpc_name   = "usw2-10-0-0-0-16"
+  vpc_name       = "usw2-10-0-0-0-16"
 }
 
 module "ecs_shared" {
@@ -94,4 +100,5 @@ module "alerting" {
   source     = "./alerting"
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
+  kms_arn    = module.kms_cloudtrailwatch.arn
 }

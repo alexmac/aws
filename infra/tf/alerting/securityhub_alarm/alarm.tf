@@ -22,7 +22,8 @@ resource "aws_cloudwatch_metric_alarm" "securityhub_alarm" {
   threshold                 = "1"
   alarm_description         = var.description
   actions_enabled           = true
+  treat_missing_data        = "notBreaching"
   alarm_actions             = [var.sns_arn]
   ok_actions                = [var.sns_arn]
-  insufficient_data_actions = [var.sns_arn]
+  insufficient_data_actions = []
 }

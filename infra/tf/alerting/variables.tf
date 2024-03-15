@@ -5,3 +5,7 @@ variable "account_id" {
 variable "region" {
   type = string
 }
+
+variable "kms_arn" {
+  type = string
+}

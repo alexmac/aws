@@ -1,10 +1,10 @@
 locals {
-  cidr_block = "${var.class_b_prefix}.0.0/16"
-  cidr_kebab   = replace(local.cidr_block, "/[./]/", "-")
-  cidr_first_ip   = replace(replace(local.cidr_block, "/[.]/", "-"), "//.*/", "")
-  region_map = {"us-west-2"="usw2"}
-  az1 = "${local.region_map[var.region]}-az1"
-  az2 = "${local.region_map[var.region]}-az2"
+  cidr_block    = "${var.class_b_prefix}.0.0/16"
+  cidr_kebab    = replace(local.cidr_block, "/[./]/", "-")
+  cidr_first_ip = replace(replace(local.cidr_block, "/[.]/", "-"), "//.*/", "")
+  region_map    = { "us-west-2" = "usw2" }
+  az1           = "${local.region_map[var.region]}-az1"
+  az2           = "${local.region_map[var.region]}-az2"
 }
 
 resource "aws_vpc" "vpc" {
@@ -155,9 +155,9 @@ module "pub-az1-subnet-1" {
   vpc_id = aws_vpc.vpc.id
   igw_id = aws_internet_gateway.igw.id
 
-  az_id      = local.az1
+  az_id          = local.az1
   vpc_cidr_block = local.cidr_block
-  cidr_block = "${var.class_b_prefix}.0.0/22"
+  cidr_block     = "${var.class_b_prefix}.0.0/22"
 }
 
 module "pub-az2-subnet-1" {
@@ -166,9 +166,9 @@ module "pub-az2-subnet-1" {
   vpc_id = aws_vpc.vpc.id
   igw_id = aws_internet_gateway.igw.id
 
-  az_id      = local.az2
+  az_id          = local.az2
   vpc_cidr_block = local.cidr_block
-  cidr_block = "${var.class_b_prefix}.4.0/22"
+  cidr_block     = "${var.class_b_prefix}.4.0/22"
 }
 
 // ${var.class_b_prefix}.8.0/22 for usw2-az3
@@ -183,9 +183,9 @@ module "prv-az1-subnet-1" {
   s3_gateway_endpoint       = aws_vpc_endpoint.s3.arn
   dynamodb_gateway_endpoint = aws_vpc_endpoint.dynamodb.arn
 
-  az_id      = local.az1
+  az_id          = local.az1
   vpc_cidr_block = local.cidr_block
-  cidr_block = "${var.class_b_prefix}.16.0/20"
+  cidr_block     = "${var.class_b_prefix}.16.0/20"
 }
 
 module "prv-az2-subnet-1" {
@@ -196,9 +196,9 @@ module "prv-az2-subnet-1" {
   s3_gateway_endpoint       = aws_vpc_endpoint.s3.arn
   dynamodb_gateway_endpoint = aws_vpc_endpoint.dynamodb.arn
 
-  az_id      = local.az2
+  az_id          = local.az2
   vpc_cidr_block = local.cidr_block
-  cidr_block = "${var.class_b_prefix}.32.0/20"
+  cidr_block     = "${var.class_b_prefix}.32.0/20"
 }
 
 // ${var.class_b_prefix}.48.0/22 for usw2-az3

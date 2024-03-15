@@ -1,6 +1,6 @@
 locals {
-  cidr_kebab   = replace(var.cidr_block, "/[./]/", "-")
-  cidr_first_ip   = replace(replace(var.cidr_block, "/[.]/", "-"), "//.*/", "")
+  cidr_kebab    = replace(var.cidr_block, "/[./]/", "-")
+  cidr_first_ip = replace(replace(var.cidr_block, "/[.]/", "-"), "//.*/", "")
 }
 
 resource "aws_subnet" "subnet" {

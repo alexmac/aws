@@ -12,6 +12,6 @@ resource "aws_route53_resolver_query_log_config_association" "example" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  name = "/aws/route53/resolver/${aws_vpc.vpc.id}"
+  name              = "/aws/route53/resolver/${aws_vpc.vpc.id}"
   retention_in_days = 7
 }

@@ -77,7 +77,7 @@ EOF
 }
 
 resource "aws_autoscaling_group" "prod_asg" {
-  name = "prod-asg-${var.vpc_id}"
+  name                = "prod-asg-${var.vpc_id}"
   vpc_zone_identifier = var.private_subnet_ids
 
   desired_capacity = 1
