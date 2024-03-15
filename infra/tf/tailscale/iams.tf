@@ -5,7 +5,7 @@ module "tailscale_assume_role" {
 }
 
 resource "aws_iam_role" "tailscale_ec2_role" {
-  name               = "tailscale-tf"
+  name               = "tailscale-${var.vpc_id}"
   assume_role_policy = module.tailscale_assume_role.policy_document
   path               = "/"
 
@@ -35,7 +35,7 @@ resource "aws_iam_role" "tailscale_ec2_role" {
 }
 
 resource "aws_iam_instance_profile" "tailscale_ec2_instance_profile" {
-  name = "tailscale-tf2"
+  name = "tailscale-${var.vpc_id}"
   path = "/"
   role = aws_iam_role.tailscale_ec2_role.name
 }

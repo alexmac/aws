@@ -63,6 +63,7 @@ EOF
 }
 
 resource "aws_autoscaling_group" "tailscale_asg" {
+  name = "tailscale-asg-${var.vpc_id}"
   vpc_zone_identifier = var.private_subnet_ids
 
   desired_capacity = 1

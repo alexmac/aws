@@ -10,6 +10,10 @@ variable "vpc_name" {
   type = string
 }
 
+variable "class_b_prefix" {
+  type = string
+}
+
 output "vpc_id" {
   value       = aws_vpc.vpc.id
   description = "The VPC ID"
@@ -17,16 +21,16 @@ output "vpc_id" {
 
 output "public_subnet_ids" {
   value = [
-    module.pub-usw2-az1-172-31-0-0-22.subnet_id,
-    module.pub-usw2-az2-172-31-4-0-22.subnet_id,
+    module.pub-az1-subnet-1.subnet_id,
+    module.pub-az2-subnet-1.subnet_id,
   ]
   description = "The IDs of the public subnets"
 }
 
 output "private_subnet_ids" {
   value = [
-    module.prv-usw2-az1-172-31-16-0-20.subnet_id,
-    module.prv-usw2-az2-172-31-32-0-20.subnet_id,
+    module.prv-az1-subnet-1.subnet_id,
+    module.prv-az2-subnet-1.subnet_id,
   ]
   description = "The IDs of the private subnets"
 }

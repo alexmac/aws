@@ -1,5 +1,14 @@
+locals {
+  cidr_block = "${var.class_b_prefix}.0.0/16"
+  cidr_kebab   = replace(local.cidr_block, "/[./]/", "-")
+  cidr_first_ip   = replace(replace(local.cidr_block, "/[.]/", "-"), "//.*/", "")
+  region_map = {"us-west-2"="usw2"}
+  az1 = "${local.region_map[var.region]}-az1"
+  az2 = "${local.region_map[var.region]}-az2"
+}
+
 resource "aws_vpc" "vpc" {
-  cidr_block           = "172.31.0.0/16"
+  cidr_block           = local.cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
   instance_tenancy     = "default"
@@ -28,7 +37,7 @@ resource "aws_default_route_table" "default_route_table" {
   route = []
 
   tags = {
-    Name = "default-172-31-0-0-16"
+    Name = "default-${local.cidr_kebab}"
   }
 }
 
@@ -60,7 +69,7 @@ resource "aws_default_network_acl" "default" {
     protocol   = "tcp"
     rule_no    = 1
     action     = "allow"
-    cidr_block = "172.31.0.0/16"
+    cidr_block = local.cidr_block
     from_port  = 22
     to_port    = 22
   }
@@ -107,18 +116,18 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_eip" "natgw_eip" {
   domain = "vpc"
   tags = {
-    Name = "pub-usw2-az1-172-31-0-0-22-natgw"
+    Name = "pub-${local.az1}-${local.cidr_first_ip}-22-natgw"
   }
 }
 
 resource "aws_nat_gateway" "natgw" {
   allocation_id = aws_eip.natgw_eip.id
-  subnet_id     = module.pub-usw2-az1-172-31-0-0-22.subnet_id
+  subnet_id     = module.pub-az1-subnet-1.subnet_id
 
   connectivity_type = "public"
 
   tags = {
-    Name = "pub-usw2-az1-172-31-0-0-22-natgw"
+    Name = "pub-${local.az1}-${local.cidr_first_ip}-22-natgw"
   }
 }
 
@@ -140,33 +149,33 @@ resource "aws_vpc_endpoint" "dynamodb" {
   }
 }
 
-module "pub-usw2-az1-172-31-0-0-22" {
+module "pub-az1-subnet-1" {
   source = "./public_subnet"
 
   vpc_id = aws_vpc.vpc.id
   igw_id = aws_internet_gateway.igw.id
 
-  az_id      = "usw2-az1"
-  cidr_block = "172.31.0.0/22"
-  cidr_id    = "172-31-0-0-22"
+  az_id      = local.az1
+  vpc_cidr_block = local.cidr_block
+  cidr_block = "${var.class_b_prefix}.0.0/22"
 }
 
-module "pub-usw2-az2-172-31-4-0-22" {
+module "pub-az2-subnet-1" {
   source = "./public_subnet"
 
   vpc_id = aws_vpc.vpc.id
   igw_id = aws_internet_gateway.igw.id
 
-  az_id      = "usw2-az2"
-  cidr_block = "172.31.4.0/22"
-  cidr_id    = "172-31-4-0-22"
+  az_id      = local.az2
+  vpc_cidr_block = local.cidr_block
+  cidr_block = "${var.class_b_prefix}.4.0/22"
 }
 
-// 172.31.8.0/22 for usw2-az3
+// ${var.class_b_prefix}.8.0/22 for usw2-az3
 
-// 172.31.12.0/22 for usw2-az4
+// ${var.class_b_prefix}.12.0/22 for usw2-az4
 
-module "prv-usw2-az1-172-31-16-0-20" {
+module "prv-az1-subnet-1" {
   source = "./private_subnet"
 
   vpc_id                    = aws_vpc.vpc.id
@@ -174,12 +183,12 @@ module "prv-usw2-az1-172-31-16-0-20" {
   s3_gateway_endpoint       = aws_vpc_endpoint.s3.arn
   dynamodb_gateway_endpoint = aws_vpc_endpoint.dynamodb.arn
 
-  az_id      = "usw2-az1"
-  cidr_block = "172.31.16.0/20"
-  cidr_id    = "172-31-16-0-20"
+  az_id      = local.az1
+  vpc_cidr_block = local.cidr_block
+  cidr_block = "${var.class_b_prefix}.16.0/20"
 }
 
-module "prv-usw2-az2-172-31-32-0-20" {
+module "prv-az2-subnet-1" {
   source = "./private_subnet"
 
   vpc_id                    = aws_vpc.vpc.id
@@ -187,11 +196,11 @@ module "prv-usw2-az2-172-31-32-0-20" {
   s3_gateway_endpoint       = aws_vpc_endpoint.s3.arn
   dynamodb_gateway_endpoint = aws_vpc_endpoint.dynamodb.arn
 
-  az_id      = "usw2-az2"
-  cidr_block = "172.31.32.0/20"
-  cidr_id    = "172-31-32-0-20"
+  az_id      = local.az2
+  vpc_cidr_block = local.cidr_block
+  cidr_block = "${var.class_b_prefix}.32.0/20"
 }
 
-// 172.31.48.0/22 for usw2-az3
+// ${var.class_b_prefix}.48.0/22 for usw2-az3
 
-// 172.31.64.0/20 for usw2-az4
+// ${var.class_b_prefix}.64.0/20 for usw2-az4

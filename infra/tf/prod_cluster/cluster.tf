@@ -1,6 +1,6 @@
 
 resource "aws_launch_template" "prod_launch_template" {
-  name_prefix            = "lt-"
+  name_prefix            = "lt-${var.vpc_id}-"
   update_default_version = true
 
   block_device_mappings {
@@ -77,6 +77,7 @@ EOF
 }
 
 resource "aws_autoscaling_group" "prod_asg" {
+  name = "prod-asg-${var.vpc_id}"
   vpc_zone_identifier = var.private_subnet_ids
 
   desired_capacity = 1
@@ -103,7 +104,7 @@ resource "aws_autoscaling_group" "prod_asg" {
 }
 
 resource "aws_ecs_capacity_provider" "prod_ecs_capacity_provider" {
-  name = "prod-capacityprovider"
+  name = "prod-capacityprovider-${var.vpc_id}"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.prod_asg.arn
@@ -121,10 +122,10 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "prod"
 }
 
-resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_cap_provider_assoc" {
-  cluster_name       = aws_ecs_cluster.ecs_cluster.name
-  capacity_providers = ["prod-capacityprovider"]
-  default_capacity_provider_strategy {
-    capacity_provider = "prod-capacityprovider"
-  }
-}
+# resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_cap_provider_assoc" {
+#   cluster_name       = aws_ecs_cluster.ecs_cluster.name
+#   capacity_providers = ["prod-capacityprovider-${var.vpc_id}"]
+#   default_capacity_provider_strategy {
+#     capacity_provider = "prod-capacityprovider-${var.vpc_id}"
+#   }
+# }

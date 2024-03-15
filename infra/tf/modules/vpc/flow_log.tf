@@ -15,7 +15,7 @@ resource "aws_cloudwatch_log_group" "log_group" {
 }
 
 module "flow_log_assume_role" {
-  source     = "../modules/iams/assume_role"
+  source     = "../../modules/iams/assume_role"
   account_id = var.account_id
   services   = ["vpc-flow-logs.amazonaws.com"]
 }

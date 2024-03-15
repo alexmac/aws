@@ -1,35 +1,30 @@
+locals {
+  cidr_kebab   = replace(var.cidr_block, "/[./]/", "-")
+  cidr_first_ip   = replace(replace(var.cidr_block, "/[.]/", "-"), "//.*/", "")
+}
+
 resource "aws_subnet" "subnet" {
   tags = {
-    Name = "prv-${var.az_id}-${var.cidr_id}"
+    Name = "pub-${var.az_id}-${local.cidr_kebab}"
   }
   vpc_id                          = var.vpc_id
   cidr_block                      = var.cidr_block
   availability_zone_id            = var.az_id
-  map_public_ip_on_launch         = false
+  map_public_ip_on_launch         = true
   assign_ipv6_address_on_creation = false
 }
 
 resource "aws_route_table" "route_table" {
   vpc_id = var.vpc_id
   tags = {
-    Name = "prv-${var.az_id}-${var.cidr_id}"
+    Name = "pub-${var.az_id}-${local.cidr_kebab}"
   }
-}
-
-resource "aws_vpc_endpoint_route_table_association" "s3_gateway_assoc" {
-  route_table_id  = aws_route_table.route_table.id
-  vpc_endpoint_id = split("vpc-endpoint/", var.s3_gateway_endpoint)[1]
-}
-
-resource "aws_vpc_endpoint_route_table_association" "dynamodb_gateway_assoc" {
-  route_table_id  = aws_route_table.route_table.id
-  vpc_endpoint_id = split("vpc-endpoint/", var.dynamodb_gateway_endpoint)[1]
 }
 
 resource "aws_route" "route" {
   route_table_id         = aws_route_table.route_table.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = var.natgw_id
+  gateway_id             = var.igw_id
 }
 
 resource "aws_route_table_association" "route_table_association" {
@@ -55,7 +50,7 @@ resource "aws_network_acl" "main" {
     protocol   = "tcp"
     rule_no    = 1
     action     = "allow"
-    cidr_block = "172.31.0.0/16"
+    cidr_block = var.vpc_cidr_block
     from_port  = 22
     to_port    = 22
   }
@@ -88,7 +83,7 @@ resource "aws_network_acl" "main" {
   }
 
   tags = {
-    Name = "prv-${var.az_id}-${var.cidr_id}"
+    Name = "pub-${var.az_id}-${local.cidr_kebab}"
   }
 }
 

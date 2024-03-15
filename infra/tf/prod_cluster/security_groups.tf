@@ -16,6 +16,7 @@ resource "aws_security_group" "prod_sg" {
 resource "aws_security_group" "prod_alb_sg" {
   name        = "prod-alb-sg"
   description = "Traffic from the prod SG"
+  vpc_id      = var.vpc_id
   tags = {
     Name = "prod-alb-sg"
   }

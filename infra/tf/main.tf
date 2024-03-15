@@ -16,12 +16,12 @@ module "aws_support_role" {
   account_id = data.aws_caller_identity.current.account_id
 }
 
-module "vpc" {
-  source = "./vpc"
-
+module "vpc-usw2-10-0" {
+  source = "./modules/vpc"
   account_id = data.aws_caller_identity.current.account_id
-  region     = data.aws_region.current.name
-  vpc_name   = "tf-main"
+  region     = "us-west-2"
+  class_b_prefix = "10.0"
+  vpc_name   = "usw2-10-0-0-0-16"
 }
 
 module "ecs_shared" {
@@ -29,57 +29,57 @@ module "ecs_shared" {
   account_id = data.aws_caller_identity.current.account_id
 }
 
-module "tailscale" {
+module "tailscale-usw2-10-0" {
   source             = "./tailscale"
   account_id         = data.aws_caller_identity.current.account_id
   region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
+  vpc_id             = module.vpc-usw2-10-0.vpc_id
 }
 
 module "packer" {
   source                 = "./packer"
   account_id             = data.aws_caller_identity.current.account_id
   region                 = data.aws_region.current.name
-  private_subnet_ids     = module.vpc.private_subnet_ids
+  private_subnet_ids     = module.vpc-usw2-10-0.private_subnet_ids
   ecs_execution_role_arn = module.ecs_shared.ecs_execution_role_arn
-  vpc_id                 = module.vpc.vpc_id
+  vpc_id                 = module.vpc-usw2-10-0.vpc_id
 }
 
 module "prod_cluster" {
   source                  = "./prod_cluster"
   account_id              = data.aws_caller_identity.current.account_id
   region                  = data.aws_region.current.name
-  private_subnet_ids      = module.vpc.private_subnet_ids
-  tailscale_ssh_access_sg = module.tailscale.tailscale_ssh_access_sg
-  vpc_id                  = module.vpc.vpc_id
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
+  vpc_id                  = module.vpc-usw2-10-0.vpc_id
 }
 
 module "instance_refresh" {
   source             = "./instance_refresh"
   account_id         = data.aws_caller_identity.current.account_id
   region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
+  vpc_id             = module.vpc-usw2-10-0.vpc_id
   prod_asg           = module.prod_cluster.prod_asg
   prod_cluster_arn   = module.prod_cluster.prod_cluster_arn
-  tailscale_asg      = module.tailscale.tailscale_asg
+  tailscale_asg      = module.tailscale-usw2-10-0.tailscale_asg
 }
 
 module "calambda" {
   source             = "./calambda"
   account_id         = data.aws_caller_identity.current.account_id
   region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
+  vpc_id             = module.vpc-usw2-10-0.vpc_id
 }
 
-module "services" {
+module "services-usw2-10-0" {
   source                 = "./services"
   account_id             = data.aws_caller_identity.current.account_id
   region                 = data.aws_region.current.name
-  public_subnet_ids      = module.vpc.public_subnet_ids
-  vpc_id                 = module.vpc.vpc_id
+  public_subnet_ids      = module.vpc-usw2-10-0.public_subnet_ids
+  vpc_id                 = module.vpc-usw2-10-0.vpc_id
   prod_alb_sg            = module.prod_cluster.prod_alb_sg
   ecs_execution_role_arn = module.ecs_shared.ecs_execution_role_arn
 }

@@ -10,10 +10,10 @@ variable "az_id" {
   type = string
 }
 
-variable "cidr_block" {
+variable "vpc_cidr_block" {
   type = string
 }
 
-variable "cidr_id" {
+variable "cidr_block" {
   type = string
 }
