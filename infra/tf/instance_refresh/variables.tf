@@ -14,7 +14,7 @@ variable "vpc_id" {
   type = string
 }
 
-variable "prod_asg" {
+variable "prod_asg_name" {
   type = string
 }
 

@@ -6,6 +6,7 @@ locals {
 resource "aws_subnet" "subnet" {
   tags = {
     Name = "prv-${var.az_id}-${local.cidr_kebab}"
+    used_by_packer_instance = "true"
   }
   vpc_id                          = var.vpc_id
   cidr_block                      = var.cidr_block

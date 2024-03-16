@@ -39,6 +39,11 @@ resource "aws_lb_listener_rule" "cooltrans_listener_rule" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "cooltrans_logs" {
+  name              = "/ecs/prod/service/cooltrans"
+  retention_in_days = 7
+}
+
 resource "aws_ecs_task_definition" "cooltrans" {
   family                   = "cooltrans"
   cpu                      = "256"
@@ -61,8 +66,7 @@ resource "aws_ecs_task_definition" "cooltrans" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-create-group"  = "true"
-          "awslogs-group"         = "ecs-prod-cooltrans"
+          "awslogs-group"         = aws_cloudwatch_log_group.cooltrans_logs.name
           "awslogs-region"        = "${var.region}"
           "awslogs-stream-prefix" = "ecs-logs"
         }

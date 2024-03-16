@@ -23,8 +23,8 @@ output "prod_alb_sg" {
   description = "SG to allow an ALB to reach containers on these hosts"
 }
 
-output "prod_asg" {
-  value = aws_autoscaling_group.prod_asg.arn
+output "prod_asg_name" {
+  value = aws_autoscaling_group.prod_asg.name
 }
 
 output "prod_cluster_arn" {

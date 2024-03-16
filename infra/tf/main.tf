@@ -67,7 +67,7 @@ module "instance_refresh" {
   region             = data.aws_region.current.name
   private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
   vpc_id             = module.vpc-usw2-10-0.vpc_id
-  prod_asg           = module.prod_cluster.prod_asg
+  prod_asg_name      = module.prod_cluster.prod_asg_name
   prod_cluster_arn   = module.prod_cluster.prod_cluster_arn
   tailscale_asg      = module.tailscale-usw2-10-0.tailscale_asg
 }

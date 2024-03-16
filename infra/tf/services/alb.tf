@@ -33,6 +33,11 @@ resource "aws_lb" "alb" {
 
   ip_address_type = "ipv4"
 
+  access_logs {
+    bucket  = aws_s3_bucket.alb_logs.bucket
+    enabled = true
+  }
+
   tags = {
     Name = "prod-alb"
   }
@@ -43,7 +48,7 @@ resource "aws_lb_listener" "prod_alb" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = "arn:aws:acm:us-west-2:${var.account_id}:certificate/c439b5cd-35d5-4052-a0f7-a09d7ebf3e0b"
+  certificate_arn   = "arn:aws:acm:${var.region}:${var.account_id}:certificate/c439b5cd-35d5-4052-a0f7-a09d7ebf3e0b"
 
   default_action {
     type             = "forward"

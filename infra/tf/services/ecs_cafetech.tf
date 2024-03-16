@@ -23,6 +23,11 @@ resource "aws_lb_target_group" "cafetech_target_group" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "cafetech_logs" {
+  name              = "/ecs/prod/service/cafetech"
+  retention_in_days = 7
+}
+
 resource "aws_ecs_task_definition" "cafetech" {
   family                   = "cafetech"
   cpu                      = "256"
@@ -45,8 +50,7 @@ resource "aws_ecs_task_definition" "cafetech" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-create-group"  = "true"
-          "awslogs-group"         = "ecs-prod-cafetech"
+          "awslogs-group"         = aws_cloudwatch_log_group.cafetech_logs.name
           "awslogs-region"        = "${var.region}"
           "awslogs-stream-prefix" = "ecs-logs"
         }

@@ -39,7 +39,10 @@ resource "aws_iam_role" "flow_log_role" {
             "logs:DescribeLogGroups",
             "logs:DescribeLogStreams",
           ]
-          Resource = [aws_cloudwatch_log_group.log_group.arn]
+          Resource = [
+            aws_cloudwatch_log_group.log_group.arn,
+            "${aws_cloudwatch_log_group.log_group.arn}:*",
+          ]
         },
       ]
     })

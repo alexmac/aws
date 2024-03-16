@@ -108,7 +108,7 @@ resource "aws_scheduler_schedule" "instancerefresh_schedule_prod_asg" {
       FunctionName   = aws_lambda_function.instancerefresh.arn,
       InvocationType = "Event",
       Payload = jsonencode({
-        asg_name    = var.prod_asg,
+        asg_name    = var.prod_asg_name,
         cluster_arn = var.prod_cluster_arn,
       })
     })

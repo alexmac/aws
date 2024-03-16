@@ -55,6 +55,7 @@ resource "aws_iam_role" "packer" {
             "ec2:DescribeImages",
             "ec2:DescribeInstances",
             "ec2:DescribeInstanceStatus",
+            "ec2:DescribeInstanceTypeOfferings",
             "ec2:DescribeRegions",
             "ec2:DescribeSecurityGroups",
             "ec2:DescribeSnapshots",

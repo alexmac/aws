@@ -17,5 +17,5 @@ resource "aws_security_group" "packer" {
 }
 
 locals {
-  packer_docker_image = "8a9abc2641a957c69ab4a375c800959190e23b1f"
+  packer_docker_image = "b311a2f091ffc0bd8861b2402409e7d19befc5bd"
 }

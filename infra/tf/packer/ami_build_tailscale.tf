@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "tailscale_logs" {
-  name              = "/ecs/${aws_ecs_cluster.packer.name}/tailscale"
+  name              = "/ecs/${aws_ecs_cluster.packer.name}/task/tailscale"
   retention_in_days = 7
 }
 

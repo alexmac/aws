@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "server_logs" {
-  name              = "/ecs/${aws_ecs_cluster.packer.name}/server"
+  name              = "/ecs/${aws_ecs_cluster.packer.name}/task/server"
   retention_in_days = 7
 }
 

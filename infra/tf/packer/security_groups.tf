@@ -19,6 +19,7 @@ resource "aws_security_group" "packer_instance" {
   vpc_id      = var.vpc_id
   tags = {
     Name = "packer-instance"
+    used_by_packer_instance = "true"
   }
 
   egress {
@@ -36,6 +37,7 @@ resource "aws_security_group" "packer_fargate_ssh" {
   vpc_id      = var.vpc_id
   tags = {
     Name = "packer-fargate-ssh"
+    used_by_packer_instance = "true"
   }
 
   ingress {
