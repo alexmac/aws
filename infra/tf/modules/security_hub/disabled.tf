@@ -212,6 +212,22 @@ locals {
     "Title" = "IAM user credentials should be disabled if not used within a pre-defined number days",
     "ControlId" = "PCI.IAM.7"
   }
+  "aws-foundational-security-best-practices/v/1.0.0/SNS.2" = {
+    "Title" = "Logging of delivery status should be enabled for notification messages sent to a topic",
+    "ControlId" = "SNS.2"
+  },
+  "nist-800-53/v/5.0.0/SNS.2" = {
+    "Title" = "Logging of delivery status should be enabled for notification messages sent to a topic",
+    "ControlId" = "SNS.2"
+  },
+  "nist-800-53/v/5.0.0/Config.1" = {
+    "Title" = "AWS Config should be enabled",
+    "ControlId" = "Config.1"
+  },
+  "aws-foundational-security-best-practices/v/1.0.0/Config.1" = {
+    "Title" = "AWS Config should be enabled",
+    "ControlId" = "Config.1"
+  },
 }
 }
 

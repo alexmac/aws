@@ -55,3 +55,66 @@ resource "aws_lb_listener" "prod_alb" {
     target_group_arn = aws_lb_target_group.cafetech_target_group.arn
   }
 }
+
+resource "aws_wafv2_web_acl_association" "this" {
+  resource_arn = aws_lb.alb.arn
+  web_acl_arn  = aws_wafv2_web_acl.this.arn
+}
+
+resource "aws_wafv2_web_acl" "this" {
+  name        = "prod-alb-protection"
+  description = "Basic WAF setup"
+  scope       = "REGIONAL"
+
+  default_action {
+    allow {}
+  }
+
+  rule {
+    name     = "reputation-rule"
+    priority = 1
+
+    override_action {
+      count {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesAmazonIpReputationList"
+        vendor_name = "AWS"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-reputation-rule"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "common-rule"
+    priority = 2
+
+    override_action {
+      count {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-common-rule"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = false
+    metric_name                = "waf-default-rule"
+    sampled_requests_enabled   = false
+  }
+}
