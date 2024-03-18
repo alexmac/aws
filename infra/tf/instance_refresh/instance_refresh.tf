@@ -1,22 +1,12 @@
-data "aws_iam_policy_document" "instancerefresh_assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [var.account_id]
-    }
-  }
+module "instancerefresh_assume_role" {
+  source     = "../modules/iams/assume_role"
+  account_id = var.account_id
+  services   = ["lambda.amazonaws.com"]
 }
 
 resource "aws_iam_role" "instancerefresh_role" {
   name               = "instancerefresh"
-  assume_role_policy = data.aws_iam_policy_document.instancerefresh_assume_role.json
+  assume_role_policy = module.instancerefresh_assume_role.policy_document
   path               = "/"
 
   managed_policy_arns = [
@@ -68,7 +58,6 @@ resource "aws_lambda_function" "instancerefresh" {
   function_name = "instancerefresh"
 
   role = aws_iam_role.instancerefresh_role.arn
-  # handler = "index.handler" # This is required but not used for container image.
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids
@@ -81,12 +70,6 @@ resource "aws_lambda_function" "instancerefresh" {
   package_type  = "Image"
 
   image_uri = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/instancerefresh:${local.instance_refresh_docker_image}"
-
-  environment {
-    variables = {
-      # Define environment variables if needed
-    }
-  }
 }
 
 resource "aws_scheduler_schedule" "instancerefresh_schedule_prod_asg" {

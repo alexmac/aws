@@ -10,19 +10,16 @@ resource "aws_iam_role" "eventbridge_scheduler" {
   path               = "/"
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEventBridgeSchedulerFullAccess",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
   ]
-
   inline_policy {
-    name = "Logs"
+    name = "InvokeLambda"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
         {
           Effect   = "Allow"
-          Action   = "logs:CreateLogGroup"
-          Resource = "*"
+          Action   = ["lambda:InvokeFunction"]
+          Resource = aws_lambda_function.instancerefresh.arn
         }
       ]
     })

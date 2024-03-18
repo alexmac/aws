@@ -16,7 +16,7 @@ resource "aws_security_group" "calambda_sg" {
 resource "aws_lambda_function" "calambda" {
   function_name = "calambda-ssh-host-key-signing"
 
-  role = "arn:aws:iam::${var.account_id}:role/calambda"
+  role = aws_iam_role.this.arn
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids
@@ -27,4 +27,12 @@ resource "aws_lambda_function" "calambda" {
   package_type  = "Image"
   image_uri     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/calambda:${local.calambda_docker_image}"
   timeout       = 60
+
+  environment {
+    variables = {
+      KEY_ARN = "arn:aws:kms:${var.region}:${var.account_id}:key/527415f9-fc26-4cb8-8c3e-c374f4099e9b"
+      CERT_VALIDITY_HOURS = 12
+      DEBUG = "false"
+    }
+  }
 }

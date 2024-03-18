@@ -15,5 +15,5 @@ variable "vpc_id" {
 }
 
 locals {
-  calambda_docker_image = "2100d454fc806c61189e1dd8feb2fe11a8dc7991"
+  calambda_docker_image = "a5889a5236a2a57feccf5a96ea4553aa3184be49"
 }
