@@ -1,7 +1,7 @@
 module "assume_role_policy" {
   source     = "../../assume_role"
   account_id = var.account_id
-  services   = ["scheduler.amazonaws.com", "events.amazonaws.com"]
+  services   = ["scheduler.amazonaws.com"]
 }
 
 resource "aws_iam_role" "eventbridge_scheduler" {
@@ -19,7 +19,7 @@ resource "aws_iam_role" "eventbridge_scheduler" {
       Statement = [
         {
           Effect   = "Allow"
-          Action   = ["ecs:RunTask"]
+          Action   = ["ecs:RunTask", "ecs:TagResource"]
           Resource = "*"
           Condition = {
             ArnLike = {

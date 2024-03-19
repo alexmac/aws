@@ -228,6 +228,14 @@ locals {
     "Title" = "AWS Config should be enabled",
     "ControlId" = "Config.1"
   },
+  "cis-aws-foundations-benchmark/v/1.2.0/2.5" = {
+    "Title" = "Ensure AWS Config is enabled",
+    "ControlId" = "CIS.2.5"
+  },
+  "cis-aws-foundations-benchmark/v/1.4.0/3.5" = {
+    "Title" = "Ensure AWS Config is enabled in all regions",
+    "ControlId" = "3.5"
+  },
 }
 }
 

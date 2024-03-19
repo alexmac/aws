@@ -118,3 +118,41 @@ resource "aws_wafv2_web_acl" "this" {
     sampled_requests_enabled   = false
   }
 }
+
+resource "aws_cloudwatch_log_group" "wacl_log" {
+  name = "aws-waf-logs-prod-alb"
+  retention_in_days = 7
+}
+
+resource "aws_wafv2_web_acl_logging_configuration" "this" {
+  log_destination_configs = [aws_cloudwatch_log_group.wacl_log.arn]
+  resource_arn            = aws_wafv2_web_acl.this.arn
+}
+
+resource "aws_cloudwatch_log_resource_policy" "this" {
+  policy_document = data.aws_iam_policy_document.wacl_log.json
+  policy_name     = "prod-web-webacl-policy"
+}
+
+data "aws_iam_policy_document" "wacl_log" {
+  version = "2012-10-17"
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = ["delivery.logs.amazonaws.com"]
+      type        = "Service"
+    }
+    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = ["${aws_cloudwatch_log_group.wacl_log.arn}:*"]
+    condition {
+      test     = "ArnLike"
+      values   = ["arn:aws:logs:${var.region}:${var.account_id}:*"]
+      variable = "aws:SourceArn"
+    }
+    condition {
+      test     = "StringEquals"
+      values   = [tostring(var.account_id)]
+      variable = "aws:SourceAccount"
+    }
+  }
+}

@@ -60,7 +60,7 @@ resource "aws_scheduler_schedule" "server_ami_schedule" {
       network_configuration {
         assign_public_ip = false
         security_groups = [
-          aws_security_group.packer_fargate.arn
+          aws_security_group.packer_fargate.id
         ]
         subnets = var.private_subnet_ids
       }

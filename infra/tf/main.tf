@@ -78,6 +78,14 @@ module "instance_refresh" {
   tailscale_asg      = module.tailscale-usw2-10-0.tailscale_asg
 }
 
+module "clean_old_amis" {
+  source             = "./clean_old_amis"
+  account_id         = data.aws_caller_identity.current.account_id
+  region             = data.aws_region.current.name
+  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
+  vpc_id             = module.vpc-usw2-10-0.vpc_id
+}
+
 module "calambda" {
   source             = "./calambda"
   account_id         = data.aws_caller_identity.current.account_id
