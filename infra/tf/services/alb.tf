@@ -120,7 +120,7 @@ resource "aws_wafv2_web_acl" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "wacl_log" {
-  name = "aws-waf-logs-prod-alb"
+  name              = "aws-waf-logs-prod-alb"
   retention_in_days = 7
 }
 

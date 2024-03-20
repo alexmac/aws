@@ -1,31 +1,13 @@
-data "aws_iam_policy_document" "policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-    condition {
-      test     = "ArnLike"
-      variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:*:${var.account_id}:trail/*"]
-    }
-  }
-
-  statement {
-    actions = ["sts:AssumeRole"]
-    effect  = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_id}:root"]
-    }
-  }
+module "cloudwatch_assume_role" {
+  source      = "../modules/iams/assume_role"
+  account_id  = var.account_id
+  services    = ["cloudtrail.amazonaws.com"]
+  source_arns = ["arn:aws:cloudtrail:*:${var.account_id}:trail/*"]
 }
 
 resource "aws_iam_role" "cloudwatch_logs_role" {
   name               = "alerting-cloudwatch"
-  assume_role_policy = data.aws_iam_policy_document.policy.json
+  assume_role_policy = module.cloudwatch_assume_role.policy_document
   path               = "/"
 
   inline_policy {

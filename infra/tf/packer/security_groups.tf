@@ -1,3 +1,17 @@
+resource "aws_security_group" "packer" {
+  name   = "packer"
+  vpc_id = var.vpc_id
+  tags = {
+    Name = "packer"
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "packer_fargate" {
   name        = "packer-fargate"
   description = "Traffic from packer fargate"
@@ -18,7 +32,7 @@ resource "aws_security_group" "packer_instance" {
   description = "Traffic from packer instance"
   vpc_id      = var.vpc_id
   tags = {
-    Name = "packer-instance"
+    Name                    = "packer-instance"
     used_by_packer_instance = "true"
   }
 
@@ -30,13 +44,12 @@ resource "aws_security_group" "packer_instance" {
   }
 }
 
-
 resource "aws_security_group" "packer_fargate_ssh" {
   name        = "packer-fargate-ssh"
   description = "Allow SSH inbound traffic from packer fargate"
   vpc_id      = var.vpc_id
   tags = {
-    Name = "packer-fargate-ssh"
+    Name                    = "packer-fargate-ssh"
     used_by_packer_instance = "true"
   }
 

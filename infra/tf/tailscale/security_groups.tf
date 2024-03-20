@@ -18,7 +18,7 @@ resource "aws_security_group" "tailscale_ssh_access" {
   description = "Allow SSH inbound traffic from tailscale"
   vpc_id      = var.vpc_id
   tags = {
-    Name = "tailscale-ssh-access"
+    Name                    = "tailscale-ssh-access"
     used_by_packer_instance = "true"
   }
 

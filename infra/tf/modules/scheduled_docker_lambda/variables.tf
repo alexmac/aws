@@ -14,18 +14,23 @@ variable "vpc_id" {
   type = string
 }
 
-variable "prod_asg_name" {
+variable "lambda_role_arn" {
   type = string
 }
 
-variable "prod_cluster_arn" {
+variable "schedule_name" {
   type = string
 }
 
-variable "tailscale_asg" {
-  type = string
+variable "schedules" {
+  type = map(any)
 }
 
-locals {
-  instance_refresh_docker_image = "411b065f69a085cbe1c163eba52e7010d4e7bc26"
+variable "timeout" {
+  type    = number
+  default = 60
+}
+
+variable "docker_image" {
+  type = string
 }

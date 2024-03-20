@@ -14,6 +14,15 @@ data "aws_iam_policy_document" "policy" {
         variable = "aws:SourceAccount"
         values   = [var.account_id]
       }
+
+      dynamic "condition" {
+        for_each = length(var.source_arns) > 0 ? [var.source_arns] : []
+        content {
+          test     = "ArnLike"
+          variable = "aws:SourceArn"
+          values   = condition.value
+        }
+      }
     }
   }
 

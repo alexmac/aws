@@ -23,8 +23,8 @@ resource "aws_iam_role" "this" {
       Version = "2012-10-17"
       Statement = [
         {
-          Effect   = "Allow"
-          Action   = [
+          Effect = "Allow"
+          Action = [
             "kms:Sign",
             "kms:GetPublicKey",
           ]
@@ -40,8 +40,8 @@ resource "aws_iam_role" "this" {
       Version = "2012-10-17"
       Statement = [
         {
-          Effect   = "Allow"
-          Action   = [
+          Effect = "Allow"
+          Action = [
             "kms:Decrypt",
           ]
           Resource = data.aws_kms_key.lambda.arn

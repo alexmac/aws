@@ -17,3 +17,7 @@ variable "vpc_id" {
 output "tailscale_asg" {
   value = aws_autoscaling_group.tailscale_asg.arn
 }
+
+output "tailscale_asg_name" {
+  value = aws_autoscaling_group.tailscale_asg.name
+}

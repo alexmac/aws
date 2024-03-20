@@ -30,9 +30,9 @@ resource "aws_lambda_function" "calambda" {
 
   environment {
     variables = {
-      KEY_ARN = "arn:aws:kms:${var.region}:${var.account_id}:key/527415f9-fc26-4cb8-8c3e-c374f4099e9b"
+      KEY_ARN             = "arn:aws:kms:${var.region}:${var.account_id}:key/527415f9-fc26-4cb8-8c3e-c374f4099e9b"
       CERT_VALIDITY_HOURS = 12
-      DEBUG = "false"
+      DEBUG               = "false"
     }
   }
 }

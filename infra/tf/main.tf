@@ -36,8 +36,8 @@ module "vpc-usw2-10-0" {
   vpc_name       = "usw2-10-0-0-0-16"
 }
 
-module "ecs_shared" {
-  source     = "./ecs_shared"
+module "ecs_execution_role" {
+  source     = "./modules/iams/ecs_execution_role"
   account_id = data.aws_caller_identity.current.account_id
 }
 
@@ -54,7 +54,7 @@ module "packer" {
   account_id             = data.aws_caller_identity.current.account_id
   region                 = data.aws_region.current.name
   private_subnet_ids     = module.vpc-usw2-10-0.private_subnet_ids
-  ecs_execution_role_arn = module.ecs_shared.ecs_execution_role_arn
+  ecs_execution_role_arn = module.ecs_execution_role.role_arn
   vpc_id                 = module.vpc-usw2-10-0.vpc_id
 }
 
@@ -65,25 +65,6 @@ module "prod_cluster" {
   private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
   tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
   vpc_id                  = module.vpc-usw2-10-0.vpc_id
-}
-
-module "instance_refresh" {
-  source             = "./instance_refresh"
-  account_id         = data.aws_caller_identity.current.account_id
-  region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
-  vpc_id             = module.vpc-usw2-10-0.vpc_id
-  prod_asg_name      = module.prod_cluster.prod_asg_name
-  prod_cluster_arn   = module.prod_cluster.prod_cluster_arn
-  tailscale_asg      = module.tailscale-usw2-10-0.tailscale_asg
-}
-
-module "clean_old_amis" {
-  source             = "./clean_old_amis"
-  account_id         = data.aws_caller_identity.current.account_id
-  region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
-  vpc_id             = module.vpc-usw2-10-0.vpc_id
 }
 
 module "calambda" {
@@ -101,7 +82,7 @@ module "services-usw2-10-0" {
   public_subnet_ids      = module.vpc-usw2-10-0.public_subnet_ids
   vpc_id                 = module.vpc-usw2-10-0.vpc_id
   prod_alb_sg            = module.prod_cluster.prod_alb_sg
-  ecs_execution_role_arn = module.ecs_shared.ecs_execution_role_arn
+  ecs_execution_role_arn = module.ecs_execution_role.role_arn
 }
 
 module "cloudfront" {
