@@ -30,10 +30,13 @@ async def get_cooltrans(s: BlogServer, req: Request):
     if source not in {"caltrans", "ndot"}:
         raise HTTPBadRequest()
 
+    title = f"{source.title()} CCTV: {friendly_name}"
+
     return {
-        "opengraph": dict(),
+        "title": title,
+        "opengraph": {"title": title},
         "friendly_name": friendly_name,
         "simple_name": simple_name,
         "stream": source + stream,
-        "meta_tags": {"description": f"Caltrans CCTV: {friendly_name}"},
+        "meta_tags": {"description": title},
     }

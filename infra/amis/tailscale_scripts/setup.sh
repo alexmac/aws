@@ -11,7 +11,7 @@ apt-get upgrade -y
 apt-get update
 
 apt-get install -y \
-	python3-pip
+	python3-pip net-tools
 
 pip3 install -U --break-system-packages \
 	awscli
