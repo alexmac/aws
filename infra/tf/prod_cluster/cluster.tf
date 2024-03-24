@@ -31,6 +31,7 @@ resource "aws_launch_template" "prod_launch_template" {
   network_interfaces {
     security_groups = [
       aws_security_group.prod_sg.id,
+      aws_security_group.prod_xray.id,
       aws_security_group.alb_container_ingress.id,
       var.tailscale_ssh_access_sg,
 
@@ -51,8 +52,9 @@ resource "aws_launch_template" "prod_launch_template" {
     }
   }
 
-  user_data = base64encode(<<EOF
-#!/bin/bash
+  user_data = base64encode(<<EOT
+#!/bin/bash -xe
+mkdir -p /etc/ecs
 cat <<'EOF' >> /etc/ecs/ecs.config
 ECS_CLUSTER=prod
 ECS_ENABLE_TASK_ENI=true
@@ -63,6 +65,7 @@ ECS_LOG_ROLLOVER_TYPE=size
 ECS_LOGLEVEL=info
 ECS_AVAILABLE_LOGGING_DRIVERS=["awslogs","json-file"]
 EOF
+EOT
   )
 
   metadata_options {

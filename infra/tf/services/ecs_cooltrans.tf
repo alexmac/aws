@@ -56,13 +56,16 @@ resource "aws_ecs_task_definition" "cooltrans" {
   container_definitions = jsonencode([
     {
       name      = "cooltrans"
-      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cooltrans:df96aa20a9ebdafc507a60607c5fb6197293714d"
+      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cooltrans:ddf8e5b9e068be4623c1986e2d581ff0af7adda4"
       essential = true
       portMappings = [
         {
           containerPort = 8081
         }
-      ]
+      ],
+      "environment" = [
+        {"name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.cooltrans_logs.name}
+      ],
       logConfiguration = {
         logDriver = "awslogs"
         options = {

@@ -11,6 +11,7 @@ resource "aws_iam_role" "server_ec2_role" {
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
     "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
   ]
 }

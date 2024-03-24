@@ -14,6 +14,11 @@ yum install -y \
 	htop git ecs-init vim aws-nitro-enclaves-cli \
 	aws-nitro-enclaves-cli-devel wget dnsutils
 
+# curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-3.x.rpm -o /tmp/xray.rpm
+curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-arm64-3.x.rpm -o /tmp/xray.rpm
+yum install -y /tmp/xray.rpm
+rm /tmp/xray.rpm
+
 pip3 install -U \
 	awscli
 

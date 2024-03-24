@@ -40,13 +40,16 @@ resource "aws_ecs_task_definition" "cafetech" {
   container_definitions = jsonencode([
     {
       name      = "cafetech"
-      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cafetech:90bd1a193fc6c83027c3fe1b530bf28e4f7380a9"
+      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cafetech:44ad648869297d47ecde21c944d9f75adf0b0ff0"
       essential = true
       portMappings = [
         {
           containerPort = 8080
         }
-      ]
+      ],
+      "environment" = [
+        {"name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.cafetech_logs.name}
+      ],
       logConfiguration = {
         logDriver = "awslogs"
         options = {

@@ -43,3 +43,26 @@ resource "aws_security_group" "alb_container_ingress" {
     security_groups = [aws_security_group.prod_alb_sg.id]
   }
 }
+
+
+resource "aws_security_group" "prod_xray" {
+  name        = "prod-xray-ingress"
+  description = "Allow host to send XRay traces to itself"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name = "prod-xray-ingress"
+  }
+
+  ingress {
+    from_port       = 40000
+    to_port         = 40000
+    protocol        = "udp"
+    security_groups = [aws_security_group.prod_sg.id]
+  }
+  ingress {
+    from_port       = 40000
+    to_port         = 40000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.prod_sg.id]
+  }
+}

@@ -48,7 +48,7 @@ module "scheduled_docker_lambda_instance_refresh" {
   lambda_role_arn    = aws_iam_role.instancerefresh_role.arn
   timeout            = 600
   schedule_name      = "instance-refresh"
-  docker_image       = "staging/instancerefresh:411b065f69a085cbe1c163eba52e7010d4e7bc26"
+  docker_image       = "staging/instancerefresh:1bd0716423146479abebbc5f9128d7e14aee547e"
   schedules = {
     prod-asg = {
       description               = "Cycle machines in prod-asg"

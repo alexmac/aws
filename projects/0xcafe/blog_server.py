@@ -14,6 +14,7 @@ from alxhttp.file import get_file
 from alxhttp.headers import content_security_policy, permissions_policy
 from alxhttp.middleware import default_middleware
 from alxhttp.server import Server
+from alxhttp.xray import init_xray
 
 from cafetech.routes.cooltrans import get_cooltrans
 from cafetech.routes.project import get_project, get_project_bg
@@ -93,7 +94,10 @@ async def main():  # pragma: nocover
     asyncio.get_running_loop().set_debug(True)
     logging.basicConfig(level=logging.INFO)
     log = logging.getLogger()
-    middlewares = default_middleware()
+
+    xray_enabled = await init_xray(log=log, service_name="0xcafe")
+
+    middlewares = default_middleware(include_xray=xray_enabled)
     middlewares.append(security_headers)
     s = BlogServer(middlewares=middlewares)
     aiohttp_jinja2.setup(s.app, loader=jinja2.FileSystemLoader("./templates"))
