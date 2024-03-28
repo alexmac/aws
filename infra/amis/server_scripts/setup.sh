@@ -35,6 +35,10 @@ cp /usr/local/ami_setup/server_scripts/startup.service /etc/systemd/system/
 cp /usr/local/ami_setup/server_scripts/sign-ssh-host-key.service /etc/systemd/system/
 cp /usr/local/ami_setup/server_scripts/sign-ssh-host-key.timer /etc/systemd/system/
 
+systemctl start docker
+source /usr/local/ami_setup/server_scripts/pull-latest-images.sh
+systemctl stop docker
+
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service
 systemctl enable sign-ssh-host-key.timer

@@ -6,16 +6,22 @@ DOCKER_IMAGE_BASE := ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.c
 
 build: docker-push-packer
 
+eks:
+	mkdir -p output && rm -f output/eks_manifest.json
+	AWS_PROFILE=packer packer build -on-error=ask eks.pkr.hcl
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/eks \
+		--value `cat output/eks_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+
 server:
 	mkdir -p output && rm -f output/server_manifest.json
 	AWS_PROFILE=packer packer build -on-error=ask server.pkr.hcl
-	aws ssm put-parameter --overwrite --name /amis/server \
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/server \
 		--value `cat output/server_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
 
 tailscale:
 	mkdir -p output && rm -f output/tailscale_manifest.json
 	AWS_PROFILE=packer packer build -on-error=ask tailscale.pkr.hcl
-	aws ssm put-parameter --overwrite --name /amis/tailscale \
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/tailscale \
 		--value `cat output/tailscale_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
 
 deploy_stacks:

@@ -2,7 +2,10 @@ data "aws_iam_policy_document" "policy" {
   dynamic "statement" {
     for_each = length(var.services) > 0 ? [var.services] : []
     content {
-      actions = ["sts:AssumeRole"]
+      actions = [
+        "sts:AssumeRole",
+        "sts:TagSession",
+      ]
       effect  = "Allow"
       principals {
         type        = "Service"

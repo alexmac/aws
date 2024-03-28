@@ -75,8 +75,3 @@ resource "aws_autoscaling_group" "tailscale_asg" {
     version = "$Latest"
   }
 }
-
-output "tailscale_ssh_access_sg" {
-  value       = aws_security_group.tailscale_ssh_access.id
-  description = "SG that allows tailscale SSH access"
-}

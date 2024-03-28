@@ -67,6 +67,26 @@ module "prod_cluster" {
   vpc_id                  = module.vpc-usw2-10-0.vpc_id
 }
 
+module "processing_cluster" {
+  source                  = "./processing_cluster"
+  account_id              = data.aws_caller_identity.current.account_id
+  region                  = data.aws_region.current.name
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
+  vpc_id                  = module.vpc-usw2-10-0.vpc_id
+}
+
+module "eks_cluster" {
+  source                  = "./eks_cluster"
+  account_id              = data.aws_caller_identity.current.account_id
+  region                  = data.aws_region.current.name
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
+  tailscale_https_access_sg = module.tailscale-usw2-10-0.tailscale_https_access_sg
+  vpc_id                  = module.vpc-usw2-10-0.vpc_id
+}
+
+
 module "calambda" {
   source             = "./calambda"
   account_id         = data.aws_caller_identity.current.account_id

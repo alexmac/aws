@@ -1,7 +1,10 @@
 module "cafetech_assume_role" {
   source     = "../modules/iams/assume_role"
   account_id = var.account_id
-  services   = ["ecs-tasks.amazonaws.com"]
+  services   = [
+    "ecs-tasks.amazonaws.com",
+    "pods.eks.amazonaws.com",
+  ]
 }
 
 resource "aws_iam_role" "service_cafetech_role" {

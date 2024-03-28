@@ -201,6 +201,6 @@ module "prv-az2-subnet-1" {
   cidr_block     = "${var.class_b_prefix}.32.0/20"
 }
 
-// ${var.class_b_prefix}.48.0/22 for usw2-az3
+// ${var.class_b_prefix}.48.0/20 for usw2-az3
 
 // ${var.class_b_prefix}.64.0/20 for usw2-az4

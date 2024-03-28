@@ -1,5 +1,10 @@
 # Query via log insights using:
-# fields @timestamp, query_name | stats count () as queryCount by query_name | sort queryCount desc | limit 20
+# fields @timestamp, query_name 
+# | filter query_name not like "amazonaws.com"
+# | filter query_name not like "compute.internal"
+# | stats count() as queryCount by query_name 
+# | sort queryCount desc 
+# | limit 100
 
 resource "aws_route53_resolver_query_log_config" "this" {
   name            = "query-logging-for-${aws_vpc.vpc.id}"

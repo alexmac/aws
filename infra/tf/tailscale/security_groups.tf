@@ -29,3 +29,19 @@ resource "aws_security_group" "tailscale_ssh_access" {
     security_groups = [aws_security_group.tailscale_sg.id]
   }
 }
+
+resource "aws_security_group" "tailscale_https_access" {
+  name        = "tailscale-https-access"
+  description = "Allow HTTPS inbound traffic from tailscale"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name                    = "tailscale-https-access"
+  }
+
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tailscale_sg.id]
+  }
+}

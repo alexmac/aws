@@ -10,7 +10,7 @@ resource "aws_iam_role" "packer" {
   path               = "/"
 
   inline_policy {
-    name = "ssm_updates"
+    name = "SSM"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
@@ -18,6 +18,11 @@ resource "aws_iam_role" "packer" {
           Effect   = "Allow"
           Action   = "ssm:PutParameter"
           Resource = "arn:aws:ssm:${var.region}:${var.account_id}:parameter/amis/*"
+        },
+        {
+          Effect   = "Allow"
+          Action   = "ssm:GetParameter"
+          Resource = "arn:aws:ssm:${var.region}::parameter/aws/service/*"
         }
       ]
     })
