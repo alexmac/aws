@@ -10,7 +10,7 @@ yum upgrade -y
 yum update
 
 yum install -y \
-	docker jq ec2-instance-connect python3-pip \
+	jq ec2-instance-connect python3-pip \
 	htop git vim aws-nitro-enclaves-cli \
 	aws-nitro-enclaves-cli-devel wget dnsutils
 
@@ -23,8 +23,16 @@ source /usr/local/ami_setup/eks_scripts/ssh-harden.sh
 
 source /usr/local/ami_setup/eks_scripts/nitro-enclave.sh
 
-cp /usr/local/ami_setup/eks_scripts/docker-daemon.json /etc/docker/daemon.json
-usermod -aG docker ec2-user
+CRICTL_VERSION="v1.29.0"
+pushd /tmp
+wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-arm64.tar.gz
+sudo tar zxvf crictl-$CRICTL_VERSION-linux-arm64.tar.gz -C /usr/local/bin
+rm -f crictl-$CRICTL_VERSION-linux-arm64.tar.gz
+cat <<'EOF' >> /etc/crictl.yaml
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock
+EOF
+popd
 
 cp /usr/local/ami_setup/eks_scripts/startup.service /etc/systemd/system/
 cp /usr/local/ami_setup/eks_scripts/sign-ssh-host-key.service /etc/systemd/system/
@@ -33,4 +41,3 @@ cp /usr/local/ami_setup/eks_scripts/sign-ssh-host-key.timer /etc/systemd/system/
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service
 systemctl enable sign-ssh-host-key.timer
-systemctl enable docker

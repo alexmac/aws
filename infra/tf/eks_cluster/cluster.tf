@@ -1,3 +1,7 @@
+locals {
+  ami = "ami-0b674e164b21016bd"
+}
+
 
 resource "aws_launch_template" "eks_node_launch_template" {
   name_prefix            = "lt-eks-node-${var.vpc_id}-"
@@ -16,7 +20,7 @@ resource "aws_launch_template" "eks_node_launch_template" {
 
   ebs_optimized = true
 
-  image_id = "ami-05150789a1c0e15a7"
+  image_id = local.ami
 
   instance_type = "t4g.small"
 
@@ -62,7 +66,7 @@ spec:
       clusterDNS:
       - 10.1.0.10
     flags:
-    - "--node-labels=eks.amazonaws.com/nodegroup-image=ami-05150789a1c0e15a7,eks.amazonaws.com/capacityType=SPOT,eks.amazonaws.com/nodegroup=prod-eks-nodes"
+    - "--node-labels=eks.amazonaws.com/nodegroup-image=${local.ami},eks.amazonaws.com/capacityType=SPOT,eks.amazonaws.com/nodegroup=${aws_eks_cluster.cluster.name}-nodes"
 
 EOT
   )
