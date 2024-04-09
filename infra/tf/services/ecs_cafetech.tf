@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "cafetech" {
   container_definitions = jsonencode([
     {
       name      = "cafetech"
-      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cafetech:44ad648869297d47ecde21c944d9f75adf0b0ff0"
+      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cafetech:6673c121c2996962e9e58831b2e0b7dae0245ace"
       essential = true
       portMappings = [
         {
