@@ -12,7 +12,12 @@ yum update
 yum install -y \
 	docker jq ec2-instance-connect python3-pip \
 	htop git ecs-init vim aws-nitro-enclaves-cli \
-	aws-nitro-enclaves-cli-devel wget
+	aws-nitro-enclaves-cli-devel wget dnsutils
+
+# curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-3.x.rpm -o /tmp/xray.rpm
+curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-arm64-3.x.rpm -o /tmp/xray.rpm
+yum install -y /tmp/xray.rpm
+rm /tmp/xray.rpm
 
 pip3 install -U \
 	awscli
@@ -29,6 +34,10 @@ usermod -aG docker ec2-user
 cp /usr/local/ami_setup/server_scripts/startup.service /etc/systemd/system/
 cp /usr/local/ami_setup/server_scripts/sign-ssh-host-key.service /etc/systemd/system/
 cp /usr/local/ami_setup/server_scripts/sign-ssh-host-key.timer /etc/systemd/system/
+
+systemctl start docker
+source /usr/local/ami_setup/server_scripts/pull-latest-images.sh
+systemctl stop docker
 
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service

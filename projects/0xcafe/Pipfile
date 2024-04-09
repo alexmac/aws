@@ -4,6 +4,7 @@ aiohttp-jinja2 = "*"
 lxml = "*"
 types-lxml = "*"
 pillow = "*"
+aws-xray-sdk = "*"
 
 [dev-packages]
 black = "*"

@@ -3,7 +3,7 @@ packer {
 
   required_plugins {
     amazon = {
-      version = ">= 1.3.0"
+      version = ">= 1.3.1"
       source  = "github.com/hashicorp/amazon"
     }
   }
@@ -20,14 +20,25 @@ data "amazon-ami" "latest-al2023" {
 }
 
 source "amazon-ebs" "server" {
-  region               = "us-west-2"
-  profile              = "packer"
-  source_ami           = data.amazon-ami.latest-al2023.id
-  subnet_id            = "subnet-05c2105bfad11abf9"
-  instance_type        = "t4g.small"
-  ssh_username         = "ec2-user"
-  ssh_interface        = "private_ip"
-  security_group_id    = "sg-0c421753140d394d3" # tailscale ssh access
+  region     = "us-west-2"
+  profile    = "packer"
+  source_ami = data.amazon-ami.latest-al2023.id
+  subnet_filter {
+    filters = {
+      "tag:used_by_packer_instance" : "true"
+    }
+    most_free = true
+    random    = false
+  }
+  instance_type               = "t4g.small"
+  ssh_username                = "ec2-user"
+  ssh_interface               = "private_ip"
+  associate_public_ip_address = false
+  security_group_filter {
+    filters = {
+      "tag:used_by_packer_instance" : "true"
+    }
+  }
   imds_support         = "v2.0"
   encrypt_boot         = true
   ami_name             = "server {{timestamp}}"
