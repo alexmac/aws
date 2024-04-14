@@ -25,6 +25,11 @@ cp /usr/local/ami_setup/tailscale_scripts/sign-ssh-host-key.service /etc/systemd
 cp /usr/local/ami_setup/tailscale_scripts/sign-ssh-host-key.timer /etc/systemd/system/
 cp /usr/local/ami_setup/tailscale_scripts/01-cloud-init-custom.cfg /etc/cloud/cloud.cfg.d/
 
+# Use AWS NTP
+echo "pool time.aws.com iburst" > /etc/chrony/sources.d/amazon-pool.sources
+sed -i 's/^pool/# pool/g' /etc/chrony/chrony.conf
+systemctl restart chronyd
+
 # Tailscale
 echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
