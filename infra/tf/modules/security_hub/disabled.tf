@@ -28,10 +28,6 @@ locals {
       "Title"     = "Ensure S3 bucket access logging is enabled on the CloudTrail S3 bucket",
       "ControlId" = "CIS.2.6"
     },
-    "aws-foundational-security-best-practices/v/1.0.0/CloudFormation.1" = {
-      "Title"     = "CloudFormation stacks should be integrated with Simple Notification Service (SNS)",
-      "ControlId" = "CloudFormation.1"
-    },
     "aws-foundational-security-best-practices/v/1.0.0/DynamoDB.1" = {
       "Title"     = "DynamoDB tables should automatically scale capacity with demand",
       "ControlId" = "DynamoDB.1"
@@ -87,10 +83,6 @@ locals {
     "cis-aws-foundations-benchmark/v/1.4.0/3.6" = {
       "Title"     = "Ensure S3 bucket access logging is enabled on the CloudTrail S3 bucket",
       "ControlId" = "3.6"
-    },
-    "nist-800-53/v/5.0.0/CloudFormation.1" = {
-      "Title"     = "CloudFormation stacks should be integrated with Simple Notification Service (SNS)",
-      "ControlId" = "CloudFormation.1"
     },
     "nist-800-53/v/5.0.0/CloudWatch.16" = {
       "Title"     = "CloudWatch log groups should be retained for at least 1 year",
@@ -164,19 +156,11 @@ locals {
       "Title"     = "S3 bucket server access logging should be enabled",
       "ControlId" = "S3.9"
     },
-    "aws-foundational-security-best-practices/v/1.0.0/S3.10" = {
-      "Title"     = "S3 buckets with versioning enabled should have lifecycle policies configured",
-      "ControlId" = "S3.10"
-    },
     "nist-800-53/v/5.0.0/S3.10" = {
       "Title"     = "S3 buckets with versioning enabled should have lifecycle policies configured",
       "ControlId" = "S3.10"
     },
     "nist-800-53/v/5.0.0/S3.11" = {
-      "Title"     = "S3 buckets should have event notifications enabled",
-      "ControlId" = "S3.11"
-    },
-    "aws-foundational-security-best-practices/v/1.0.0/S3.11" = {
       "Title"     = "S3 buckets should have event notifications enabled",
       "ControlId" = "S3.11"
     },
@@ -212,14 +196,6 @@ locals {
       "Title"     = "IAM user credentials should be disabled if not used within a pre-defined number days",
       "ControlId" = "PCI.IAM.7"
     }
-    "aws-foundational-security-best-practices/v/1.0.0/SNS.2" = {
-      "Title"     = "Logging of delivery status should be enabled for notification messages sent to a topic",
-      "ControlId" = "SNS.2"
-    },
-    "nist-800-53/v/5.0.0/SNS.2" = {
-      "Title"     = "Logging of delivery status should be enabled for notification messages sent to a topic",
-      "ControlId" = "SNS.2"
-    },
     "nist-800-53/v/5.0.0/Config.1" = {
       "Title"     = "AWS Config should be enabled",
       "ControlId" = "Config.1"
@@ -235,6 +211,30 @@ locals {
     "cis-aws-foundations-benchmark/v/1.4.0/3.5" = {
       "Title"     = "Ensure AWS Config is enabled in all regions",
       "ControlId" = "3.5"
+    },
+    "aws-foundational-security-best-practices/v/1.0.0/EC2.17" = {
+      "Title" = "EC2 instances should not use multiple ENIs",
+      "ControlId" = "EC2.17"
+    },
+    "nist-800-53/v/5.0.0/EC2.17" = {
+      "Title" = "EC2 instances should not use multiple ENIs",
+      "ControlId" = "EC2.17"
+    },
+    "nist-800-53/v/5.0.0/AutoScaling.6" = {
+      "Title" = "Auto Scaling groups should use multiple instance types in multiple Availability Zones",
+      "ControlId" = "AutoScaling.6"
+    },
+    "aws-foundational-security-best-practices/v/1.0.0/AutoScaling.6" = {
+      "Title" = "Auto Scaling groups should use multiple instance types in multiple Availability Zones",
+      "ControlId" = "AutoScaling.6"
+    },
+    "nist-800-53/v/5.0.0/SecretsManager.4" = {
+      "Title" = "Secrets Manager secrets should be rotated within a specified number of days",
+      "ControlId" = "SecretsManager.4"
+    },
+    "aws-foundational-security-best-practices/v/1.0.0/SecretsManager.4" = {
+      "Title" = "Secrets Manager secrets should be rotated within a specified number of days",
+      "ControlId" = "SecretsManager.4"
     },
   }
 }
