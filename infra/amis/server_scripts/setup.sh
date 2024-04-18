@@ -12,7 +12,8 @@ yum update
 yum install -y \
 	docker jq ec2-instance-connect python3-pip \
 	htop git ecs-init vim aws-nitro-enclaves-cli \
-	aws-nitro-enclaves-cli-devel wget dnsutils
+	aws-nitro-enclaves-cli-devel wget dnsutils \
+	amazon-ssm-agent
 
 # curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-3.x.rpm -o /tmp/xray.rpm
 curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-arm64-3.x.rpm -o /tmp/xray.rpm
@@ -42,5 +43,6 @@ systemctl stop docker
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service
 systemctl enable sign-ssh-host-key.timer
+systemctl enable amazon-ssm-agent
 systemctl enable docker
 systemctl enable ecs

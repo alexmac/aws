@@ -9,6 +9,8 @@ packer {
   }
 }
 
+# aws ec2 describe-images --owners 137112412989 --filters "Name=name,Values=al2023-ami-minimal-2023.*-arm64"
+
 data "amazon-ami" "latest-al2023" {
   filters = {
     virtualization-type = "hvm"

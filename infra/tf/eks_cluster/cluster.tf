@@ -1,5 +1,5 @@
 locals {
-  ami = "ami-0b674e164b21016bd"
+  ami = "ami-0d25c78958cf8166c"
 }
 
 
