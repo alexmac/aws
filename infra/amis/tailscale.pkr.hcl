@@ -33,6 +33,8 @@ source "amazon-ebs" "tailscale" {
   instance_type               = "t4g.small"
   ssh_username                = "ubuntu"
   ssh_interface               = "private_ip"
+  temporary_key_pair_name     = "tailscale {{timestamp}}"
+  temporary_key_pair_type     = "ed25519"
   associate_public_ip_address = false
   security_group_filter {
     filters = {
@@ -46,7 +48,7 @@ source "amazon-ebs" "tailscale" {
   deprecate_at         = timeadd(timestamp(), "240h")
   ami_description      = "created from ${data.amazon-ami.latest-ubuntu.id}"
   run_tags = {
-    Name = "tailscale {{timestamp}}"
+    Name = "packer building: tailscale {{timestamp}}"
   }
   snapshot_tags = {
     Name = "tailscale {{timestamp}}"
@@ -57,6 +59,11 @@ build {
   sources = [
     "source.amazon-ebs.tailscale"
   ]
+
+  provisioner "file" {
+    source      = "shared"
+    destination = "/tmp"
+  }
 
   provisioner "file" {
     source      = "tailscale_scripts"

@@ -28,6 +28,8 @@ source "amazon-ebs" "eks-node" {
   instance_type               = "t4g.small"
   ssh_username                = "ec2-user"
   ssh_interface               = "private_ip"
+  temporary_key_pair_name     = "eks {{timestamp}}"
+  temporary_key_pair_type     = "ed25519"
   associate_public_ip_address = false
   security_group_filter {
     filters = {
@@ -41,7 +43,7 @@ source "amazon-ebs" "eks-node" {
   deprecate_at         = timeadd(timestamp(), "240h")
   ami_description      = "created from ${data.amazon-parameterstore.eks-ami.value}"
   run_tags = {
-    Name = "eks-node {{timestamp}}"
+    Name = "packer building: eks-node {{timestamp}}"
   }
   snapshot_tags = {
     Name = "eks-node {{timestamp}}"
@@ -52,6 +54,11 @@ build {
   sources = [
     "source.amazon-ebs.eks-node"
   ]
+
+  provisioner "file" {
+    source      = "shared"
+    destination = "/tmp"
+  }
 
   provisioner "file" {
     source      = "eks_scripts"

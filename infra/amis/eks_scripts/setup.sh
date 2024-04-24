@@ -4,6 +4,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 mkdir -p /usr/local/ami_setup
 cp -r /tmp/eks_scripts /usr/local/ami_setup/
+cp -r /tmp/shared /usr/local/ami_setup/
 
 yum update
 yum upgrade -y
@@ -19,9 +20,9 @@ pip3 install -U \
 
 aws configure set default.region us-west-2
 
-source /usr/local/ami_setup/eks_scripts/ssh-harden.sh
+source /usr/local/ami_setup/shared/al2023/ssh-harden.sh
 
-source /usr/local/ami_setup/eks_scripts/nitro-enclave.sh
+source /usr/local/ami_setup/shared/al2023/nitro-enclave.sh
 
 CRICTL_VERSION="v1.29.0"
 pushd /tmp
@@ -35,8 +36,8 @@ EOF
 popd
 
 cp /usr/local/ami_setup/eks_scripts/startup.service /etc/systemd/system/
-cp /usr/local/ami_setup/eks_scripts/sign-ssh-host-key.service /etc/systemd/system/
-cp /usr/local/ami_setup/eks_scripts/sign-ssh-host-key.timer /etc/systemd/system/
+cp /usr/local/ami_setup/shared/al2023/sign-ssh-host-key.service /etc/systemd/system/
+cp /usr/local/ami_setup/shared/al2023/sign-ssh-host-key.timer /etc/systemd/system/
 
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service

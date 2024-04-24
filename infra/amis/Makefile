@@ -24,6 +24,12 @@ tailscale:
 	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/tailscale \
 		--value `cat output/tailscale_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
 
+github:
+	mkdir -p output && rm -f output/github_manifest.json
+	AWS_PROFILE=packer packer build -on-error=ask github.pkr.hcl
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/github \
+		--value `cat output/github_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+
 deploy_stacks:
 	@for file in CFN_*.yml ; do \
 		stack_name=$$(echo $${file%.yml} | sed 's/_/-/g'); \

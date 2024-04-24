@@ -9,22 +9,20 @@ packer {
   }
 }
 
-# aws ec2 describe-images --owners 137112412989 --filters "Name=name,Values=al2023-ami-minimal-2023.*-arm64"
-
-data "amazon-ami" "latest-al2023" {
+data "amazon-ami" "latest-ubuntu" {
   filters = {
     virtualization-type = "hvm"
-    name                = "al2023-ami-minimal-2023.*-arm64"
+    name                = "ubuntu/images/hvm-ssd-gp3/ubuntu-mantic-*-arm64-server-*"
     root-device-type    = "ebs"
   }
-  owners      = ["137112412989"]
+  owners      = ["099720109477"]
   most_recent = true
 }
 
-source "amazon-ebs" "server" {
+source "amazon-ebs" "github" {
   region     = "us-west-2"
   profile    = "packer"
-  source_ami = data.amazon-ami.latest-al2023.id
+  source_ami = data.amazon-ami.latest-ubuntu.id
   subnet_filter {
     filters = {
       "tag:used_by_packer_instance" : "true"
@@ -33,9 +31,9 @@ source "amazon-ebs" "server" {
     random    = false
   }
   instance_type               = "t4g.small"
-  ssh_username                = "ec2-user"
+  ssh_username                = "ubuntu"
   ssh_interface               = "private_ip"
-  temporary_key_pair_name     = "server {{timestamp}}"
+  temporary_key_pair_name     = "github {{timestamp}}"
   temporary_key_pair_type     = "ed25519"
   associate_public_ip_address = false
   security_group_filter {
@@ -45,21 +43,21 @@ source "amazon-ebs" "server" {
   }
   imds_support         = "v2.0"
   encrypt_boot         = true
-  ami_name             = "server {{timestamp}}"
-  iam_instance_profile = "server"
+  ami_name             = "github {{timestamp}}"
+  iam_instance_profile = "github-vpc-0da7caa17e2e57342"
   deprecate_at         = timeadd(timestamp(), "240h")
-  ami_description      = "created from ${data.amazon-ami.latest-al2023.id}"
+  ami_description      = "created from ${data.amazon-ami.latest-ubuntu.id}"
   run_tags = {
-    Name = "packer building: server {{timestamp}}"
+    Name = "packer building: github {{timestamp}}"
   }
   snapshot_tags = {
-    Name = "server {{timestamp}}"
+    Name = "github {{timestamp}}"
   }
 }
 
 build {
   sources = [
-    "source.amazon-ebs.server"
+    "source.amazon-ebs.github"
   ]
 
   provisioner "file" {
@@ -68,12 +66,12 @@ build {
   }
 
   provisioner "file" {
-    source      = "server_scripts"
+    source      = "github_scripts"
     destination = "/tmp"
   }
 
   provisioner "shell" {
-    inline = ["sudo bash -xe /tmp/server_scripts/setup.sh"]
+    inline = ["sudo bash -xe /tmp/github_scripts/setup.sh"]
   }
 
   provisioner "shell" {
@@ -81,7 +79,7 @@ build {
   }
 
   post-processor "manifest" {
-    output     = "output/server_manifest.json"
+    output     = "output/github_manifest.json"
     strip_path = true
   }
 }
