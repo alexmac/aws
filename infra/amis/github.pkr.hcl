@@ -12,7 +12,7 @@ packer {
 data "amazon-ami" "latest-ubuntu" {
   filters = {
     virtualization-type = "hvm"
-    name                = "ubuntu/images/hvm-ssd-gp3/ubuntu-mantic-*-arm64-server-*"
+    name                = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-*-arm64-server-*"
     root-device-type    = "ebs"
   }
   owners      = ["099720109477"]

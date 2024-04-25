@@ -3,8 +3,8 @@
 ################################################################################
 
 [Unit]
-Before=sshd.service
-Wants=sshd.service
+Before=ssh.service
+Wants=ssh.service
 After=cloud-init.service
 Description=Runs SSH Host Key Signing
 

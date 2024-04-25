@@ -14,7 +14,7 @@ apt-get update
 apt-get install -y \
 	python3-pip net-tools
 
-pip3 install -U --break-system-packages \
+pip3 install -U --break-system-packages --ignore-installed \
 	awscli
 
 aws configure set default.region us-west-2
