@@ -16,7 +16,6 @@ yum install -y \
 	aws-nitro-enclaves-cli-devel wget dnsutils \
 	amazon-ssm-agent
 
-# curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-3.x.rpm -o /tmp/xray.rpm
 curl https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-arm64-3.x.rpm -o /tmp/xray.rpm
 yum install -y /tmp/xray.rpm
 rm /tmp/xray.rpm
@@ -54,3 +53,5 @@ systemctl enable sign-ssh-host-key.timer
 systemctl enable amazon-ssm-agent
 systemctl enable docker
 systemctl enable ecs
+
+source /usr/local/ami_setup/shared/al2023/clean.sh

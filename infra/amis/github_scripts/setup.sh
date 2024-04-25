@@ -44,3 +44,5 @@ systemctl enable startup
 systemctl enable shutdown
 systemctl enable sign-ssh-host-key.service
 systemctl enable sign-ssh-host-key.timer
+
+source /usr/local/ami_setup/shared/ubuntu/clean.sh

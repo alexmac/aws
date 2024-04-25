@@ -42,3 +42,5 @@ cp /usr/local/ami_setup/shared/al2023/sign-ssh-host-key.timer /etc/systemd/syste
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service
 systemctl enable sign-ssh-host-key.timer
+
+source /usr/local/ami_setup/shared/al2023/clean.sh

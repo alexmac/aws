@@ -39,6 +39,9 @@ chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
 
 curl -fsSL https://tailscale.com/install.sh | sh
 
+systemctl disable ModemManager
 systemctl enable startup
 systemctl enable sign-ssh-host-key.service
 systemctl enable sign-ssh-host-key.timer
+
+source /usr/local/ami_setup/shared/ubuntu/clean.sh
