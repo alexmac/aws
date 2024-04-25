@@ -44,7 +44,6 @@ resource "aws_security_group" "alb_container_ingress" {
   }
 }
 
-
 resource "aws_security_group" "prod_xray" {
   name        = "prod-xray-ingress"
   description = "Allow host to send XRay traces to itself"
@@ -62,6 +61,22 @@ resource "aws_security_group" "prod_xray" {
   ingress {
     from_port       = 40000
     to_port         = 40000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.prod_sg.id]
+  }
+}
+
+resource "aws_security_group" "prod_otel" {
+  name        = "prod-otel-ingress"
+  description = "Allow host to send Open Telemetry metrics to itself"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name = "prod-otel-ingress"
+  }
+
+  ingress {
+    from_port       = 4317
+    to_port         = 4318
     protocol        = "tcp"
     security_groups = [aws_security_group.prod_sg.id]
   }

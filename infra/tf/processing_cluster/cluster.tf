@@ -94,9 +94,9 @@ resource "aws_autoscaling_group" "processing_asg" {
   name                = "processing-asg-${var.vpc_id}"
   vpc_zone_identifier = var.private_subnet_ids
 
-  desired_capacity = 1
+  desired_capacity = 0
   max_size         = 2
-  min_size         = 1
+  min_size         = 0
 
   launch_template {
     id      = aws_launch_template.processing_launch_template.id

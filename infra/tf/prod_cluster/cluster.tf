@@ -32,6 +32,7 @@ resource "aws_launch_template" "prod_launch_template" {
     security_groups = [
       aws_security_group.prod_sg.id,
       aws_security_group.prod_xray.id,
+      aws_security_group.prod_otel.id,
       aws_security_group.alb_container_ingress.id,
       var.tailscale_ssh_access_sg,
 

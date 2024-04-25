@@ -96,6 +96,14 @@ module "eks_cluster" {
   vpc_id                  = module.vpc-usw2-10-0.vpc_id
 }
 
+module "github_actions" {
+  source     = "./github_actions"
+  account_id = var.account_id
+  region     = data.aws_region.current.name
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
+  vpc_id             = module.vpc-usw2-10-0.vpc_id
+}
 
 module "calambda" {
   source             = "./calambda"
@@ -126,4 +134,10 @@ module "alerting" {
   account_id = var.account_id
   region     = data.aws_region.current.name
   kms_arn    = module.kms_cloudtrailwatch.arn
+}
+
+module "prometheus" {
+  source     = "./modules/prometheus"
+  account_id = var.account_id
+  region     = data.aws_region.current.name
 }

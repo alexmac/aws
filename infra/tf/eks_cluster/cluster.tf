@@ -1,5 +1,5 @@
 locals {
-  ami = "ami-0d25c78958cf8166c"
+  ami = "ami-088e753de03872a41"
 }
 
 
@@ -131,7 +131,7 @@ resource "aws_eks_node_group" "nodes" {
   subnet_ids      = var.private_subnet_ids
 
   scaling_config {
-    desired_size = 1
+    desired_size = 0
     max_size     = 2
     min_size     = 0
   }
