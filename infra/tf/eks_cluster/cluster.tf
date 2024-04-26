@@ -109,9 +109,9 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   vpc_config {
-    subnet_ids = var.private_subnet_ids
+    subnet_ids              = var.private_subnet_ids
     endpoint_private_access = true
-    endpoint_public_access = false
+    endpoint_public_access  = false
     security_group_ids = [
       # aws_security_group.eks_control_plane.id,
       # aws_security_group.eks_control_plane_ingress.id,
@@ -119,7 +119,7 @@ resource "aws_eks_cluster" "cluster" {
     ]
   }
   kubernetes_network_config {
-    ip_family = "ipv4"
+    ip_family         = "ipv4"
     service_ipv4_cidr = "10.1.0.0/22"
   }
 }
@@ -139,7 +139,7 @@ resource "aws_eks_node_group" "nodes" {
   update_config {
     max_unavailable_percentage = 100
   }
-  
+
   capacity_type = "SPOT"
 
   ami_type = "CUSTOM"
@@ -200,9 +200,9 @@ resource "aws_eks_addon" "eks-pod-identity-agent" {
 }
 
 resource "aws_eks_access_entry" "example" {
-  cluster_name      = aws_eks_cluster.cluster.name
-  principal_arn     = "arn:aws:iam::${var.account_id}:user/alexblog"
-  type              = "STANDARD"
+  cluster_name  = aws_eks_cluster.cluster.name
+  principal_arn = "arn:aws:iam::${var.account_id}:user/alexblog"
+  type          = "STANDARD"
 }
 
 resource "aws_eks_access_policy_association" "AmazonEKSAdminPolicy" {
@@ -211,7 +211,7 @@ resource "aws_eks_access_policy_association" "AmazonEKSAdminPolicy" {
   principal_arn = "arn:aws:iam::${var.account_id}:user/alexblog"
 
   access_scope {
-    type       = "cluster"
+    type = "cluster"
   }
 }
 
@@ -221,6 +221,6 @@ resource "aws_eks_access_policy_association" "AmazonEKSClusterAdminPolicy" {
   principal_arn = "arn:aws:iam::${var.account_id}:user/alexblog"
 
   access_scope {
-    type       = "cluster"
+    type = "cluster"
   }
 }

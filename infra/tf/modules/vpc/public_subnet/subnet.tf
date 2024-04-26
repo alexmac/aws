@@ -5,7 +5,7 @@ locals {
 
 resource "aws_subnet" "subnet" {
   tags = {
-    Name = "pub-${var.az_id}-${local.cidr_kebab}"
+    Name                    = "pub-${var.az_id}-${local.cidr_kebab}"
     used_by_packer_instance = "false"
   }
   vpc_id                          = var.vpc_id

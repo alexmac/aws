@@ -36,7 +36,7 @@ resource "aws_route53_resolver_firewall_rule_group_association" "default" {
 
   name                   = "${aws_vpc.vpc.id} - ${var.dns_rulegroup_ids[count.index]}"
   firewall_rule_group_id = var.dns_rulegroup_ids[count.index]
-  priority               = 101+count.index
+  priority               = 101 + count.index
   vpc_id                 = aws_vpc.vpc.id
 }
 

@@ -50,8 +50,8 @@ resource "aws_ecs_task_definition" "twitch" {
       image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/twitch:72fcda46c6d9c5896194050d1bf0ad814946cee0"
       essential = true
       "environment" = [
-        {"name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.twitch_logs.name},
-        {"name" = "AWS_DEFAULT_REGION", "value" = var.region },
+        { "name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.twitch_logs.name },
+        { "name" = "AWS_DEFAULT_REGION", "value" = var.region },
       ],
       logConfiguration = {
         logDriver = "awslogs"

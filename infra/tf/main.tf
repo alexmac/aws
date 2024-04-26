@@ -53,7 +53,7 @@ module "vpc-usw2-10-0" {
     module.route53.aws_rule_group_id,
     module.route53.custom_rule_group_id,
   ]
-  vpc_name       = "usw2-10-0-0-0-16"
+  vpc_name = "usw2-10-0-0-0-16"
 }
 
 module "ecs_execution_role" {
@@ -97,22 +97,22 @@ module "processing_cluster" {
 }
 
 module "eks_cluster" {
-  source                  = "./eks_cluster"
+  source                    = "./eks_cluster"
+  account_id                = var.account_id
+  region                    = data.aws_region.current.name
+  private_subnet_ids        = module.vpc-usw2-10-0.private_subnet_ids
+  tailscale_ssh_access_sg   = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
+  tailscale_https_access_sg = module.tailscale-usw2-10-0.tailscale_https_access_sg
+  vpc_id                    = module.vpc-usw2-10-0.vpc_id
+}
+
+module "github_actions" {
+  source                  = "./github_actions"
   account_id              = var.account_id
   region                  = data.aws_region.current.name
   private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
   tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
-  tailscale_https_access_sg = module.tailscale-usw2-10-0.tailscale_https_access_sg
   vpc_id                  = module.vpc-usw2-10-0.vpc_id
-}
-
-module "github_actions" {
-  source     = "./github_actions"
-  account_id = var.account_id
-  region     = data.aws_region.current.name
-  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
-  tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
-  vpc_id             = module.vpc-usw2-10-0.vpc_id
 }
 
 module "calambda" {

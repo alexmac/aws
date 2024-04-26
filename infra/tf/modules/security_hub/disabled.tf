@@ -213,27 +213,27 @@ locals {
       "ControlId" = "3.5"
     },
     "aws-foundational-security-best-practices/v/1.0.0/EC2.17" = {
-      "Title" = "EC2 instances should not use multiple ENIs",
+      "Title"     = "EC2 instances should not use multiple ENIs",
       "ControlId" = "EC2.17"
     },
     "nist-800-53/v/5.0.0/EC2.17" = {
-      "Title" = "EC2 instances should not use multiple ENIs",
+      "Title"     = "EC2 instances should not use multiple ENIs",
       "ControlId" = "EC2.17"
     },
     "nist-800-53/v/5.0.0/AutoScaling.6" = {
-      "Title" = "Auto Scaling groups should use multiple instance types in multiple Availability Zones",
+      "Title"     = "Auto Scaling groups should use multiple instance types in multiple Availability Zones",
       "ControlId" = "AutoScaling.6"
     },
     "aws-foundational-security-best-practices/v/1.0.0/AutoScaling.6" = {
-      "Title" = "Auto Scaling groups should use multiple instance types in multiple Availability Zones",
+      "Title"     = "Auto Scaling groups should use multiple instance types in multiple Availability Zones",
       "ControlId" = "AutoScaling.6"
     },
     "nist-800-53/v/5.0.0/SecretsManager.4" = {
-      "Title" = "Secrets Manager secrets should be rotated within a specified number of days",
+      "Title"     = "Secrets Manager secrets should be rotated within a specified number of days",
       "ControlId" = "SecretsManager.4"
     },
     "aws-foundational-security-best-practices/v/1.0.0/SecretsManager.4" = {
-      "Title" = "Secrets Manager secrets should be rotated within a specified number of days",
+      "Title"     = "Secrets Manager secrets should be rotated within a specified number of days",
       "ControlId" = "SecretsManager.4"
     },
   }

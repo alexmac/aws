@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "policy" {
         "sts:AssumeRole",
         "sts:TagSession",
       ]
-      effect  = "Allow"
+      effect = "Allow"
       principals {
         type        = "Service"
         identifiers = statement.value

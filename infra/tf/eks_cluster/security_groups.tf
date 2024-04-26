@@ -15,9 +15,9 @@ resource "aws_security_group" "eks_node_ingress" {
     Name = "eks-node"
   }
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
     security_groups = [aws_security_group.eks_control_plane.id]
   }
   egress {
@@ -36,9 +36,9 @@ resource "aws_security_group" "eks_control_plane_ingress" {
     Name = "eks-control-plane-ingress"
   }
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
     security_groups = [
       aws_security_group.eks_node_ingress.id,
     ]

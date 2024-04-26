@@ -5,8 +5,8 @@ resource "aws_route53_resolver_firewall_rule_group" "custom" {
 resource "aws_route53_resolver_firewall_domain_list" "custom" {
   name = "custom"
   domains = [
-    "twitter.com",
-    "*.twitter.com",
+    "*.twitter.com.",
+    "twitter.com.",
   ]
 }
 

@@ -35,7 +35,7 @@ resource "aws_security_group" "tailscale_https_access" {
   description = "Allow HTTPS inbound traffic from tailscale"
   vpc_id      = var.vpc_id
   tags = {
-    Name                    = "tailscale-https-access"
+    Name = "tailscale-https-access"
   }
 
   ingress {

@@ -19,7 +19,7 @@ variable "vpc_id" {
 }
 
 output "processing_sg" {
-  value       = aws_security_group.processing_sg.id
+  value = aws_security_group.processing_sg.id
 }
 
 output "processing_asg_name" {

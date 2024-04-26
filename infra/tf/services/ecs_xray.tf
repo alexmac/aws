@@ -34,14 +34,14 @@ resource "aws_ecs_task_definition" "xray" {
       essential = true
       portMappings = [
         {
-          "hostPort" = 40000,
+          "hostPort"      = 40000,
           "containerPort" = 2000,
-          "protocol" = "udp"
+          "protocol"      = "udp"
         },
         {
-          "hostPort" = 40000,
+          "hostPort"      = 40000,
           "containerPort" = 2000,
-          "protocol" = "tcp"
+          "protocol"      = "tcp"
         }
       ]
       logConfiguration = {
@@ -60,7 +60,7 @@ resource "aws_ecs_service" "xray" {
   name                               = "xray"
   cluster                            = "prod"
   task_definition                    = aws_ecs_task_definition.xray.arn
-  scheduling_strategy = "DAEMON"
+  scheduling_strategy                = "DAEMON"
   launch_type                        = "EC2"
   deployment_maximum_percent         = 100
   deployment_minimum_healthy_percent = 0

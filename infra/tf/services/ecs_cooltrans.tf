@@ -64,7 +64,7 @@ resource "aws_ecs_task_definition" "cooltrans" {
         }
       ],
       "environment" = [
-        {"name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.cooltrans_logs.name}
+        { "name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.cooltrans_logs.name }
       ],
       logConfiguration = {
         logDriver = "awslogs"

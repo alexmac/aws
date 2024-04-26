@@ -27,7 +27,7 @@ resource "aws_launch_template" "github_launch_template" {
   instance_market_options {
     market_type = "spot"
     spot_options {
-      max_price = 0.04
+      max_price          = 0.04
       spot_instance_type = "one-time"
     }
   }

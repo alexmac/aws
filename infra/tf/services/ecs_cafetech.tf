@@ -1,7 +1,7 @@
 module "cafetech_assume_role" {
   source     = "../modules/iams/assume_role"
   account_id = var.account_id
-  services   = [
+  services = [
     "ecs-tasks.amazonaws.com",
     "pods.eks.amazonaws.com",
   ]
@@ -51,7 +51,7 @@ resource "aws_ecs_task_definition" "cafetech" {
         }
       ],
       "environment" = [
-        {"name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.cafetech_logs.name}
+        { "name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.cafetech_logs.name }
       ],
       logConfiguration = {
         logDriver = "awslogs"
