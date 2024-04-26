@@ -22,6 +22,12 @@ module "securityhub" {
   account_id = var.account_id
 }
 
+module "route53" {
+  source     = "./modules/route53"
+  region     = data.aws_region.current.name
+  account_id = var.account_id
+}
+
 module "kms_cloudtrailwatch" {
   source     = "./modules/kms/logs"
   region     = data.aws_region.current.name
@@ -43,6 +49,10 @@ module "vpc-usw2-10-0" {
   account_id     = var.account_id
   region         = "us-west-2"
   class_b_prefix = "10.0"
+  dns_rulegroup_ids = [
+    module.route53.aws_rule_group_id,
+    module.route53.custom_rule_group_id,
+  ]
   vpc_name       = "usw2-10-0-0-0-16"
 }
 

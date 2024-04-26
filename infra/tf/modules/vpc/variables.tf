@@ -14,6 +14,10 @@ variable "class_b_prefix" {
   type = string
 }
 
+variable "dns_rulegroup_ids" {
+  type = list(string)
+}
+
 output "vpc_id" {
   value       = aws_vpc.vpc.id
   description = "The VPC ID"

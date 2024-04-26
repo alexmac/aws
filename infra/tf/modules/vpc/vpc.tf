@@ -31,6 +31,15 @@ resource "aws_vpc_dhcp_options_association" "dhcp_opts_assoc" {
   dhcp_options_id = aws_vpc_dhcp_options.dhcp_opts.id
 }
 
+resource "aws_route53_resolver_firewall_rule_group_association" "default" {
+  count = length(var.dns_rulegroup_ids)
+
+  name                   = "${aws_vpc.vpc.id} - ${var.dns_rulegroup_ids[count.index]}"
+  firewall_rule_group_id = var.dns_rulegroup_ids[count.index]
+  priority               = 101+count.index
+  vpc_id                 = aws_vpc.vpc.id
+}
+
 resource "aws_default_route_table" "default_route_table" {
   default_route_table_id = aws_vpc.vpc.default_route_table_id
 
