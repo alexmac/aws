@@ -2,11 +2,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.46"
+      version = ">= 5.60"
     }
   }
 
-  required_version = ">= 1.7.0"
+  required_version = ">= 1.9.0"
 
   backend "s3" {
     bucket         = "cafetech-terraform"

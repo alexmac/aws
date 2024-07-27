@@ -2,7 +2,6 @@ locals {
   ami = "ami-088e753de03872a41"
 }
 
-
 resource "aws_launch_template" "eks_node_launch_template" {
   name_prefix            = "lt-eks-node-${var.vpc_id}-"
   update_default_version = true

@@ -45,3 +45,19 @@ resource "aws_security_group" "tailscale_https_access" {
     security_groups = [aws_security_group.tailscale_sg.id]
   }
 }
+
+resource "aws_security_group" "tailscale_postgres_access" {
+  name        = "tailscale-postgres-access"
+  description = "Allow postgres inbound traffic from tailscale"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name = "tailscale-postgres-access"
+  }
+
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tailscale_sg.id]
+  }
+}

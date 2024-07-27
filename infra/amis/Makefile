@@ -30,6 +30,18 @@ github:
 	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/github \
 		--value `cat output/github_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
 
+ubuntu:
+	mkdir -p output && rm -f output/ubuntu_manifest.json
+	AWS_PROFILE=packer packer build -on-error=ask ubuntu.pkr.hcl
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/ubuntu \
+		--value `cat output/ubuntu_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+
+debian:
+	mkdir -p output && rm -f output/debian_manifest.json
+	AWS_PROFILE=packer packer build -on-error=ask debian.pkr.hcl
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/debian \
+		--value `cat output/debian_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+
 deploy_stacks:
 	@for file in CFN_*.yml ; do \
 		stack_name=$$(echo $${file%.yml} | sed 's/_/-/g'); \

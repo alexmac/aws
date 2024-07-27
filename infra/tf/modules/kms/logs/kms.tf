@@ -61,7 +61,7 @@ resource "aws_kms_key_policy" "this" {
         "Resource" = "*",
         "Condition" = {
           "StringEquals" = {
-            "kms:CallerAccount" = "${var.account_id}"
+            "kms:CallerAccount" = var.account_id
           }
         },
       },

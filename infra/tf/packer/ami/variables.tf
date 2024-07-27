@@ -43,5 +43,5 @@ variable "packer_iam_role_arn" {
 }
 
 locals {
-  packer_docker_image = "e135131db684733216fe50c7b0d4555520d55bee"
+  packer_docker_image = "1798767bcf40e45aa12400ae805639f2c9fd517e"
 }
