@@ -47,7 +47,7 @@ resource "aws_ecs_task_definition" "twitch" {
   container_definitions = jsonencode([
     {
       name      = "twitch"
-      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/twitch:b944bc1ca33df51dd151c5c0a2cdb9d46947ca07"
+      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/twitch:f308527cae090ff516f0125ef7c13de022238458"
       essential = true
       "environment" = [
         { "name" = "AWS_CLOUDWATCH_LOG_GROUP", "value" = aws_cloudwatch_log_group.twitch_logs.name },

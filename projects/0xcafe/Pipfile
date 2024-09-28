@@ -23,4 +23,4 @@ css = "bunx tailwindcss -i ./tailwind.tw.css -o ./static/tailwind.css"
 csswatch = "bunx tailwindcss -i ./tailwind.tw.css -o ./static/tailwind.css --watch"
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"
