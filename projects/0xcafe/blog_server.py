@@ -6,15 +6,17 @@ import os
 from functools import partial
 from typing import List, Optional
 
+import aiohttp
 import aiohttp_jinja2
 import jinja2
 from aiohttp.typedefs import Handler, Middleware
-from aiohttp.web import Request, middleware
+from aiohttp.web import Request, middleware, StreamResponse
 from alxhttp.file import get_file
 from alxhttp.headers import content_security_policy, permissions_policy
 from alxhttp.middleware import default_middleware
 from alxhttp.server import Server
 from alxhttp.xray import init_xray
+from yarl import URL
 
 from cafetech.routes.cooltrans import get_cooltrans
 from cafetech.routes.project import get_project, get_project_bg
@@ -49,9 +51,22 @@ async def security_headers(request: Request, handler: Handler):
     return resp
 
 
+async def api_proxy(s: BlogServer, req: Request):
+    async with aiohttp.ClientSession().get(
+        URL("http://localhost:8081/").join(req.rel_url)
+    ) as r:
+        resp = StreamResponse(status=r.status, headers=r.headers)
+        await resp.prepare(req)
+        await resp.write(await r.read())
+        return resp
+
+
 class BlogServer(Server):
     def __init__(self, middlewares: Optional[List[Middleware]] = None):
         super().__init__(middlewares=middlewares)
+
+        # debug only
+        # self.app.router.add_get(r"/api/{loc:.*}", partial(api_proxy, self))
 
         self.app.router.add_get(r"/", partial(get_slash, self))
         self.app.router.add_get(r"/cooltrans", partial(get_cooltrans, self))

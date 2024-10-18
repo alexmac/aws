@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 @aiohttp_jinja2.template("cooltrans.html")
 async def get_cooltrans(s: BlogServer, req: Request):
     friendly_name = "3 / Tahoe City / Hwy 89 at Alpine Meadows"
-    simple_name = "3-TahoeCity-Hwy89atAlpineMeadows"
+    simple_name = "3---Tahoe-City---Hwy-89-at-Alpine-Meadows"
     stream = "/D3/89_Alpine_Meadows_PLA89_NB.stream"
     source = req.match_info.get("source", "caltrans")
     if loc := req.match_info.get("loc"):
