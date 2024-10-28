@@ -11,17 +11,26 @@ resource "aws_iam_role" "this" {
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEventBridgeSchedulerFullAccess",
   ]
-  inline_policy {
-    name = "InvokeLambda"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect   = "Allow"
-          Action   = ["lambda:InvokeFunction"]
-          Resource = module.lambda.lambda_arn
-        }
-      ]
-    })
-  }
+}
+
+resource "aws_iam_role_policy" "this" {
+  name = "InvokeLambda"
+  role = aws_iam_role.this.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["lambda:InvokeFunction"]
+        Resource = module.lambda.lambda_arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "this" {
+  role_name = aws_iam_role.this.name
+  policy_names = [
+    aws_iam_role_policy.this.name,
+  ]
 }

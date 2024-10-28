@@ -24,27 +24,35 @@ resource "aws_iam_role" "flow_log_role" {
   name               = "vpc-flow-logs-${aws_vpc.vpc.id}"
   assume_role_policy = module.flow_log_assume_role.policy_document
   path               = "/"
+}
 
-  inline_policy {
-    name = "logs"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents",
-            "logs:DescribeLogGroups",
-            "logs:DescribeLogStreams",
-          ]
-          Resource = [
-            aws_cloudwatch_log_group.log_group.arn,
-            "${aws_cloudwatch_log_group.log_group.arn}:*",
-          ]
-        },
-      ]
-    })
-  }
+resource "aws_iam_role_policy" "this" {
+  name = "Logs"
+  role = aws_iam_role.flow_log_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams",
+        ]
+        Resource = [
+          aws_cloudwatch_log_group.log_group.arn,
+          "${aws_cloudwatch_log_group.log_group.arn}:*",
+        ]
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "this" {
+  role_name = aws_iam_role.flow_log_role.name
+  policy_names = [
+    aws_iam_role_policy.this.name,
+  ]
 }

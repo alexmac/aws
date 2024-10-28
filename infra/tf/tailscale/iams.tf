@@ -13,26 +13,35 @@ resource "aws_iam_role" "tailscale_ec2_role" {
     "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
     "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
   ]
-
-  inline_policy {
-    name = "secret-access"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Action = [
-            "secretsmanager:GetSecretValue",
-            "secretsmanager:DescribeSecret",
-          ]
-          Resource = [
-            "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:tailscale-IglZn3"
-          ]
-          Effect = "Allow"
-        },
-      ]
-    })
-  }
 }
+
+resource "aws_iam_role_policy" "tailscale_ec2_role_secrets_policy" {
+  name = "tailscale-${var.vpc_id}-secrets"
+  role = aws_iam_role.tailscale_ec2_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+        ]
+        Resource = [
+          "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:tailscale-IglZn3"
+        ]
+        Effect = "Allow"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "tailscale_ec2_role_inline_policies" {
+  role_name = aws_iam_role.tailscale_ec2_role.name
+  policy_names = [
+    aws_iam_role_policy.tailscale_ec2_role_secrets_policy.name
+  ]
+}
+
 
 resource "aws_iam_instance_profile" "tailscale_ec2_instance_profile" {
   name = "tailscale-${var.vpc_id}"

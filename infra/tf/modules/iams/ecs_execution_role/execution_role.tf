@@ -11,19 +11,26 @@ resource "aws_iam_role" "ecs_execution_role" {
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
   ]
-
-  inline_policy {
-    name = "Logs"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect   = "Allow"
-          Action   = ["logs:CreateLogGroup"]
-          Resource = "*"
-        }
-      ]
-    })
-  }
 }
 
+resource "aws_iam_role_policy" "this" {
+  name = "Logs"
+  role = aws_iam_role.ecs_execution_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["logs:CreateLogGroup"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "this" {
+  role_name = aws_iam_role.ecs_execution_role.name
+  policy_names = [
+    aws_iam_role_policy.this.name,
+  ]
+}

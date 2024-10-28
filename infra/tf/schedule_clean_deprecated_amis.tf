@@ -13,24 +13,32 @@ resource "aws_iam_role" "clean_deprecated_amis_role" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
   ]
+}
 
-  inline_policy {
-    name = "AMICleanup"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = [
-            "ec2:DescribeImages",
-            "ec2:DeregisterImage",
-            "ec2:DeleteSnapshot",
-          ]
-          Resource = "*"
-        },
-      ]
-    })
-  }
+resource "aws_iam_role_policy" "clean_deprecated_amis_role_policy" {
+  name = "AMICleanup"
+  role = aws_iam_role.clean_deprecated_amis_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeImages",
+          "ec2:DeregisterImage",
+          "ec2:DeleteSnapshot",
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "clean_deprecated_amis_role" {
+  role_name = aws_iam_role.clean_deprecated_amis_role.name
+  policy_names = [
+    aws_iam_role_policy.clean_deprecated_amis_role_policy.name,
+  ]
 }
 
 module "scheduled_docker_lambda" {

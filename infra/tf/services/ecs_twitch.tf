@@ -8,26 +8,33 @@ resource "aws_iam_role" "service_twitch" {
   name               = "service-twitch"
   assume_role_policy = module.twitch_assume_role.policy_document
   path               = "/"
+}
 
+resource "aws_iam_role_policy" "this" {
+  name = "secret-access"
+  role = aws_iam_role.service_twitch.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+        ]
+        Resource = [
+          "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:twitch/*"
+        ]
+        Effect = "Allow"
+      },
+    ]
+  })
+}
 
-  inline_policy {
-    name = "secret-access"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Action = [
-            "secretsmanager:GetSecretValue",
-            "secretsmanager:DescribeSecret",
-          ]
-          Resource = [
-            "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:twitch/*"
-          ]
-          Effect = "Allow"
-        },
-      ]
-    })
-  }
+resource "aws_iam_role_policies_exclusive" "this" {
+  role_name = aws_iam_role.service_twitch.name
+  policy_names = [
+    aws_iam_role_policy.this.name,
+  ]
 }
 
 resource "aws_cloudwatch_log_group" "twitch_logs" {

@@ -9,42 +9,50 @@ resource "aws_iam_role" "cloudwatch_logs_role" {
   name               = "alerting-cloudwatch"
   assume_role_policy = module.cloudwatch_assume_role.policy_document
   path               = "/"
+}
 
-  inline_policy {
-    name = "CloudWatchLogsPolicy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          "Sid" = "LogUsage",
-          Action = [
-            "logs:CreateLogStream",
-            "logs:DescribeLogGroups",
-            "logs:DescribeLogStreams",
-            "logs:PutLogEvents",
-          ]
-          Effect = "Allow"
-          Resource = [
-            "${aws_cloudwatch_log_group.cloudtrail.arn}:*",
-          ]
-        },
+resource "aws_iam_role_policy" "cloudwatch_logs_role_secrets_policy" {
+  name = "CloudWatchLogsPolicy"
+  role = aws_iam_role.cloudwatch_logs_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Sid" = "LogUsage",
+        Action = [
+          "logs:CreateLogStream",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams",
+          "logs:PutLogEvents",
+        ]
+        Effect = "Allow"
+        Resource = [
+          "${aws_cloudwatch_log_group.cloudtrail.arn}:*",
+        ]
+      },
 
-        {
-          "Sid"    = "KMSUsage",
-          "Effect" = "Allow",
-          "Action" = [
-            "kms:Encrypt*",
-            "kms:Decrypt*",
-            "kms:ReEncrypt*",
-            "kms:GenerateDataKey*",
-            "kms:Describe*",
-          ],
-          "Resource" = var.kms_arn,
-        }
+      {
+        "Sid"    = "KMSUsage",
+        "Effect" = "Allow",
+        "Action" = [
+          "kms:Encrypt*",
+          "kms:Decrypt*",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:Describe*",
+        ],
+        "Resource" = var.kms_arn,
+      }
 
-      ]
-    })
-  }
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "cloudwatch_logs_role_inline_policies" {
+  role_name = aws_iam_role.cloudwatch_logs_role.name
+  policy_names = [
+    aws_iam_role_policy.cloudwatch_logs_role_secrets_policy.name
+  ]
 }
 
 resource "aws_sns_topic" "cis_alarms" {

@@ -13,30 +13,38 @@ resource "aws_iam_role" "instancerefresh_role" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
   ]
+}
 
-  inline_policy {
-    name = "RefreshPolicy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = [
-            "autoscaling:DescribeAutoScalingGroups",
-            "autoscaling:DescribeAutoScalingInstances",
-            "autoscaling:DetachInstances",
-            "ec2:TerminateInstances",
-            "ecs:DescribeClusters",
-            "ecs:DescribeContainerInstances",
-            "ecs:ListClusters",
-            "ecs:ListContainerInstances",
-            "ecs:UpdateContainerInstancesState",
-          ]
-          Resource = "*"
-        },
-      ]
-    })
-  }
+resource "aws_iam_role_policy" "instancerefresh_role_policy" {
+  name = "RefreshPolicy"
+  role = aws_iam_role.instancerefresh_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DetachInstances",
+          "ec2:TerminateInstances",
+          "ecs:DescribeClusters",
+          "ecs:DescribeContainerInstances",
+          "ecs:ListClusters",
+          "ecs:ListContainerInstances",
+          "ecs:UpdateContainerInstancesState",
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policies_exclusive" "instancerefresh_role" {
+  role_name = aws_iam_role.instancerefresh_role.name
+  policy_names = [
+    aws_iam_role_policy.instancerefresh_role_policy.name,
+  ]
 }
 
 module "scheduled_docker_lambda_instance_refresh" {
