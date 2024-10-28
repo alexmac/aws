@@ -15,6 +15,25 @@ resource "aws_iam_role" "server_ec2_role" {
     "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
     "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
   ]
+
+  inline_policy {
+    name = "secret-access"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "secretsmanager:GetSecretValue",
+            "secretsmanager:DescribeSecret",
+          ]
+          Resource = [
+            "arn:aws:secretsmanager:${var.region}:${var.account_id}:secret:tailscale/server-lJsNyf"
+          ]
+          Effect = "Allow"
+        },
+      ]
+    })
+  }
 }
 
 resource "aws_iam_instance_profile" "server_ec2_instance_profile" {

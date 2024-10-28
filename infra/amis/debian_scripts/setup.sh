@@ -18,8 +18,6 @@ pip3 install -U --break-system-packages --ignore-installed \
 	awscli requests
 pip3 check
 
-aws configure set default.region us-west-2
-
 source /usr/local/ami_setup/shared/debian/ssh-harden.sh
 source /usr/local/ami_setup/shared/ubuntu/chrony.sh
 

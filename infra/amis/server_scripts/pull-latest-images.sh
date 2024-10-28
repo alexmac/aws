@@ -1,10 +1,10 @@
 #!/bin/bash
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-AWS_REGION=$(aws configure get region)
+AWS_REGION=$(aws configure list | grep region | awk '{print $2}')
 
 # Login to AWS ECR
-aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+# aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
 # Get a list of all repository names in your AWS ECR
 REPO_NAMES=$(aws ecr describe-repositories | jq -r '.repositories[].repositoryName')

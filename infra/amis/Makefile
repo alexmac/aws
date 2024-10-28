@@ -17,6 +17,10 @@ server:
 	AWS_PROFILE=packer packer build -on-error=ask server.pkr.hcl
 	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/server \
 		--value `cat output/server_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/server/arm \
+		--value `cat output/server_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/server/x86 \
+		--value `cat output/server_manifest.json | jq -r '.builds[1].artifact_id' | sed 's/.*://'`
 
 tailscale:
 	mkdir -p output && rm -f output/tailscale_manifest.json
@@ -35,6 +39,10 @@ ubuntu:
 	AWS_PROFILE=packer packer build -on-error=ask ubuntu.pkr.hcl
 	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/ubuntu \
 		--value `cat output/ubuntu_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/ubuntu/arm \
+		--value `cat output/ubuntu_manifest.json | jq -r '.builds[0].artifact_id' | sed 's/.*://'`
+	aws ssm put-parameter --overwrite --type String --data-type aws:ec2:image --name /amis/ubuntu/x86 \
+		--value `cat output/ubuntu_manifest.json | jq -r '.builds[1].artifact_id' | sed 's/.*://'`
 
 debian:
 	mkdir -p output && rm -f output/debian_manifest.json

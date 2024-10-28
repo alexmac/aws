@@ -1,7 +1,9 @@
 #!/bin/bash -xe
 
 RESP_FILE=`mktemp --suffix=.json`
-TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 30"`
+AWS_REGION=`curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/placement/region`
+aws configure set default.region $AWS_REGION
 IID=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | base64 | tr -d '\n'`
 IIDSIG=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/signature | tr -d '\n'`
 HOST_KEY=`cat /etc/ssh/ssh_host_ed25519_key.pub`

@@ -18,17 +18,15 @@ yum install -y \
 pip3 install -U \
 	awscli
 
-aws configure set default.region us-west-2
-
 source /usr/local/ami_setup/shared/al2023/ssh-harden.sh
 
 source /usr/local/ami_setup/shared/al2023/nitro-enclave.sh
 
-CRICTL_VERSION="v1.29.0"
+CRICTL_VERSION="v1.31.1"
 pushd /tmp
-wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-arm64.tar.gz
-sudo tar zxvf crictl-$CRICTL_VERSION-linux-arm64.tar.gz -C /usr/local/bin
-rm -f crictl-$CRICTL_VERSION-linux-arm64.tar.gz
+wget "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-${ARM64_OR_AMD64}.tar.gz" -O crictl.tar.gz
+sudo tar zxvf crictl.tar.gz -C /usr/local/bin
+rm crictl.tar.gz
 cat <<'EOF' >> /etc/crictl.yaml
 runtime-endpoint: unix:///run/containerd/containerd.sock
 image-endpoint: unix:///run/containerd/containerd.sock

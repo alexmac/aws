@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+source /usr/local/ami_setup/shared/universal/configure-aws-region.sh
+
 pushd /actions-runner
 
 REPO="alexmac/runner-test"

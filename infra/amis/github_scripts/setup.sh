@@ -17,13 +17,11 @@ apt-get install -y \
 pip3 install -U --break-system-packages --ignore-installed \
 	awscli requests
 
-aws configure set default.region us-west-2
-
 source /usr/local/ami_setup/shared/ubuntu/ssh-harden.sh
 source /usr/local/ami_setup/shared/ubuntu/chrony.sh
 
 # Install Github Actions Runner
-export GH_ACTIONS_VERSION=2.316.0
+export GH_ACTIONS_VERSION=2.320.0
 mkdir -p /actions-runner
 pushd /actions-runner
 curl -O -L "https://github.com/actions/runner/releases/download/v${GH_ACTIONS_VERSION}/actions-runner-linux-arm64-${GH_ACTIONS_VERSION}.tar.gz"
