@@ -5,6 +5,7 @@ locals {
   region_map    = { "us-west-2" = "usw2" }
   az1           = "${local.region_map[var.region]}-az1"
   az2           = "${local.region_map[var.region]}-az2"
+  az3           = "${local.region_map[var.region]}-az3"
 }
 
 resource "aws_vpc" "vpc" {
@@ -180,7 +181,16 @@ module "pub-az2-subnet-1" {
   cidr_block     = "${var.class_b_prefix}.4.0/22"
 }
 
-// ${var.class_b_prefix}.8.0/22 for usw2-az3
+module "pub-az3-subnet-1" {
+  source = "./public_subnet"
+
+  vpc_id = aws_vpc.vpc.id
+  igw_id = aws_internet_gateway.igw.id
+
+  az_id          = local.az3
+  vpc_cidr_block = local.cidr_block
+  cidr_block     = "${var.class_b_prefix}.8.0/22"
+}
 
 // ${var.class_b_prefix}.12.0/22 for usw2-az4
 

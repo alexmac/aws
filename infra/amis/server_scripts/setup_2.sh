@@ -4,18 +4,19 @@ export DEBIAN_FRONTEND=noninteractive
 
 source /usr/local/ami_setup/shared/universal/arch.sh
 
-yum install -y \
+source /usr/local/ami_setup/shared/al2023/system-upgrade.sh
+dnf install -y \
 	docker jq ec2-instance-connect python3-pip \
 	htop git ecs-init vim aws-nitro-enclaves-cli \
 	aws-nitro-enclaves-cli-devel wget dnsutils \
 	amazon-ssm-agent amazon-ecr-credential-helper
 
 curl "${XRAY_RPM}" -o /tmp/xray.rpm
-yum install -y /tmp/xray.rpm
+dnf install -y /tmp/xray.rpm
 rm /tmp/xray.rpm
 
 curl "https://aws-otel-collector.s3.amazonaws.com/amazon_linux/${ARM64_OR_AMD64}/latest/aws-otel-collector.rpm" -o /tmp/aws-otel-collector.rpm
-yum install -y /tmp/aws-otel-collector.rpm
+dnf install -y /tmp/aws-otel-collector.rpm
 rm /tmp/aws-otel-collector.rpm
 /opt/aws/aws-otel-collector/bin/aws-otel-collector-ctl -a start
 /opt/aws/aws-otel-collector/bin/aws-otel-collector-ctl -a stop

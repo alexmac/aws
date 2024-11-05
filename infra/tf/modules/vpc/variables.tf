@@ -25,8 +25,9 @@ output "vpc_id" {
 
 output "public_subnet_ids" {
   value = [
-    module.pub-az1-subnet-1.subnet_id,
+    # module.pub-az1-subnet-1.subnet_id,
     module.pub-az2-subnet-1.subnet_id,
+    module.pub-az3-subnet-1.subnet_id,
   ]
   description = "The IDs of the public subnets"
 }

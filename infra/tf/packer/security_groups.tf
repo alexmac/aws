@@ -61,10 +61,25 @@ resource "aws_security_group" "packer_fargate_ssh" {
       aws_security_group.packer_fargate.id
     ]
   }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group" "packer_fargate_https" {
+  name        = "packer-fargate-https"
+  description = "Allow HTTPS inbound traffic from packer fargate"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name                    = "packer-fargate-https"
+    used_by_packer_instance = "true"
+  }
+
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+    security_groups = [
+      aws_security_group.packer_fargate.id
+    ]
   }
 }
+
+

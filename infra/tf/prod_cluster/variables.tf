@@ -23,6 +23,15 @@ output "prod_alb_sg" {
   description = "SG to allow an ALB to reach containers on these hosts"
 }
 
+output "prod_internal_alb_sg" {
+  value       = aws_security_group.prod_internal_alb_sg.id
+  description = "SG to allow an ALB to reach containers on these hosts"
+}
+
+output "prod_https_sg" {
+  value = aws_security_group.prod_https.id
+}
+
 output "prod_sg" {
   value = aws_security_group.prod_sg.id
 }

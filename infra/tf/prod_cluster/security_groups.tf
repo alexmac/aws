@@ -28,6 +28,21 @@ resource "aws_security_group" "prod_alb_sg" {
   }
 }
 
+resource "aws_security_group" "prod_internal_alb_sg" {
+  name        = "prod-internal-alb-sg"
+  description = "Traffic from the internal prod SG"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name = "prod-internal-alb-sg"
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "alb_container_ingress" {
   name        = "prod-alb-ingress"
   description = "Allow ephemeral ports from ALB"
@@ -37,10 +52,13 @@ resource "aws_security_group" "alb_container_ingress" {
   }
 
   ingress {
-    from_port       = 32768
-    to_port         = 60999
-    protocol        = "tcp"
-    security_groups = [aws_security_group.prod_alb_sg.id]
+    from_port = 32768
+    to_port   = 60999
+    protocol  = "tcp"
+    security_groups = [
+      aws_security_group.prod_alb_sg.id,
+      aws_security_group.prod_internal_alb_sg.id,
+    ]
   }
 }
 
@@ -79,5 +97,28 @@ resource "aws_security_group" "prod_otel" {
     to_port         = 4318
     protocol        = "tcp"
     security_groups = [aws_security_group.prod_sg.id]
+  }
+}
+
+
+resource "aws_security_group" "prod_https" {
+  name        = "prod-https-ingress"
+  description = "Allow HTTPS ingress from a prod machine"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name = "prod-https-ingress"
+  }
+
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.prod_sg.id]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }

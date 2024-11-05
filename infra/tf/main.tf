@@ -123,13 +123,17 @@ module "calambda" {
 }
 
 module "services-usw2-10-0" {
-  source                 = "./services"
-  account_id             = var.account_id
-  region                 = data.aws_region.current.name
-  public_subnet_ids      = module.vpc-usw2-10-0.public_subnet_ids
-  vpc_id                 = module.vpc-usw2-10-0.vpc_id
-  prod_alb_sg            = module.prod_cluster.prod_alb_sg
-  ecs_execution_role_arn = module.ecs_execution_role.role_arn
+  source                    = "./services"
+  account_id                = var.account_id
+  region                    = data.aws_region.current.name
+  public_subnet_ids         = module.vpc-usw2-10-0.public_subnet_ids
+  vpc_id                    = module.vpc-usw2-10-0.vpc_id
+  prod_alb_sg               = module.prod_cluster.prod_alb_sg
+  prod_https_sg             = module.prod_cluster.prod_https_sg
+  prod_internal_alb_sg      = module.prod_cluster.prod_internal_alb_sg
+  tailscale_https_access_sg = module.tailscale-usw2-10-0.tailscale_https_access_sg
+  packer_fargate_https_sg   = module.packer.packer_fargate_https_sg
+  ecs_execution_role_arn    = module.ecs_execution_role.role_arn
 }
 
 module "cloudfront" {

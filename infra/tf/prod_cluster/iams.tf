@@ -8,7 +8,11 @@ resource "aws_iam_role" "server_ec2_role" {
   name               = "server"
   assume_role_policy = module.ec2_assume_role.policy_document
   path               = "/"
-  managed_policy_arns = [
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "server_ec2_role" {
+  role_name = aws_iam_role.server_ec2_role.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
     "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",

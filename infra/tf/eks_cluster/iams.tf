@@ -8,7 +8,11 @@ resource "aws_iam_role" "eks_node_ec2_role" {
   name               = "eks-node"
   assume_role_policy = module.ec2_assume_role.policy_document
   path               = "/"
-  managed_policy_arns = [
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "inline_policies" {
+  role_name = aws_iam_role.eks_node_ec2_role.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
@@ -41,7 +45,11 @@ resource "aws_iam_role" "eks_cluster_role" {
   name               = "eks-cluster"
   assume_role_policy = data.aws_iam_policy_document.policy.json
   path               = "/"
-  managed_policy_arns = [
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "eks_cluster_role_managed_policies" {
+  role_name = aws_iam_role.eks_cluster_role.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
     "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
   ]

@@ -8,7 +8,11 @@ resource "aws_iam_role" "ecs_execution_role" {
   name               = "ecs-execution-role"
   assume_role_policy = module.assume_role_policy.policy_document
   path               = "/"
-  managed_policy_arns = [
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "ecs_execution_role" {
+  role_name = aws_iam_role.ecs_execution_role.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
   ]
 }

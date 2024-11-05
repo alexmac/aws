@@ -17,3 +17,7 @@ variable "vpc_id" {
 variable "ecs_execution_role_arn" {
   type = string
 }
+
+output "packer_fargate_https_sg" {
+  value = aws_security_group.packer_fargate_https.id
+}

@@ -12,10 +12,6 @@ resource "aws_iam_role" "this" {
   name               = "calambda"
   assume_role_policy = module.calambda_assume_role.policy_document
   path               = "/"
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-  ]
 }
 
 resource "aws_iam_role_policy" "key_signing" {
@@ -51,6 +47,14 @@ resource "aws_iam_role_policy" "lambda_env_vars" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "inline_policies" {
+  role_name = aws_iam_role.this.name
+  policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+  ]
 }
 
 resource "aws_iam_role_policies_exclusive" "inline_policies" {

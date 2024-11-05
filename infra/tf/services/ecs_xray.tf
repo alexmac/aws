@@ -8,7 +8,11 @@ resource "aws_iam_role" "service_xray" {
   name               = "service-xray"
   assume_role_policy = module.xray_assume_role.policy_document
   path               = "/"
-  managed_policy_arns = [
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "service_xray" {
+  role_name = aws_iam_role.service_xray.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
   ]
 }

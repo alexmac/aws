@@ -8,8 +8,11 @@ resource "aws_iam_role" "clean_deprecated_amis_role" {
   name               = "clean-deprecated-amis"
   assume_role_policy = module.clean_deprecated_amis_assume_role.policy_document
   path               = "/"
+}
 
-  managed_policy_arns = [
+resource "aws_iam_role_policy_attachments_exclusive" "clean_deprecated_amis_role" {
+  role_name = aws_iam_role.clean_deprecated_amis_role.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
   ]

@@ -8,8 +8,12 @@ resource "aws_iam_role" "eventbridge_scheduler" {
   name               = "eventbridge-scheduler-${var.name}"
   assume_role_policy = module.assume_role_policy.policy_document
   path               = "/"
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/AmazonEventBridgeSchedulerFullAccess"
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "this" {
+  role_name = aws_iam_role.eventbridge_scheduler.name
+  policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonEventBridgeSchedulerFullAccess",
   ]
 }
 

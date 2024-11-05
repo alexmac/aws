@@ -6,11 +6,11 @@ mkdir -p /usr/local/ami_setup
 cp -r /tmp/server_scripts /usr/local/ami_setup/
 cp -r /tmp/shared /usr/local/ami_setup/
 
-yum update
-yum upgrade -y
-yum autoremove
-yum clean all
-yum update
-
+dnf update
+source /usr/local/ami_setup/shared/al2023/system-upgrade.sh
+dnf upgrade -y
+dnf autoremove
+dnf clean all
+dnf update
 
 reboot

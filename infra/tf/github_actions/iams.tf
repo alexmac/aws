@@ -8,14 +8,6 @@ resource "aws_iam_role" "github_ec2_role" {
   name               = "github-${var.vpc_id}"
   assume_role_policy = module.github_assume_role.policy_document
   path               = "/"
-
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
-    "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
-    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
-  ]
-
 }
 
 resource "aws_iam_instance_profile" "github_ec2_instance_profile" {
@@ -42,6 +34,16 @@ resource "aws_iam_role_policy" "github_ec2_role_policy" {
       },
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "inline_policies" {
+  role_name = aws_iam_role.github_ec2_role.name
+  policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
+    "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
+  ]
 }
 
 resource "aws_iam_role_policies_exclusive" "inline_policies" {

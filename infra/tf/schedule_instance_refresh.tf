@@ -8,8 +8,11 @@ resource "aws_iam_role" "instancerefresh_role" {
   name               = "instance-refresh"
   assume_role_policy = module.instancerefresh_assume_role.policy_document
   path               = "/"
+}
 
-  managed_policy_arns = [
+resource "aws_iam_role_policy_attachments_exclusive" "instancerefresh_role" {
+  role_name = aws_iam_role.instancerefresh_role.name
+  policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
   ]
