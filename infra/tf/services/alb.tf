@@ -34,7 +34,7 @@ resource "aws_lb" "alb" {
   ip_address_type = "ipv4"
 
   access_logs {
-    bucket  = aws_s3_bucket.alb_logs.bucket
+    bucket  = module.alb_logs.bucket_id
     enabled = true
   }
 
@@ -51,8 +51,13 @@ resource "aws_lb_listener" "prod_alb" {
   certificate_arn   = "arn:aws:acm:${var.region}:${var.account_id}:certificate/c439b5cd-35d5-4052-a0f7-a09d7ebf3e0b"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.cafetech_target_group.arn
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "application/json"
+      message_body = "{}"
+      status_code  = "400"
+    }
   }
 }
 

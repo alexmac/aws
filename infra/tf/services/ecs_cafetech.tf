@@ -26,6 +26,22 @@ resource "aws_lb_target_group" "cafetech_target_group" {
   }
 }
 
+resource "aws_lb_listener_rule" "cafetech_listener_rule" {
+  listener_arn = aws_lb_listener.prod_alb.arn
+  priority     = 200
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cafetech_target_group.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/cafetech/*"]
+    }
+  }
+}
+
 resource "aws_cloudwatch_log_group" "cafetech_logs" {
   name              = "/ecs/prod/service/cafetech"
   retention_in_days = 7

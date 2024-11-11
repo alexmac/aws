@@ -1,25 +1,24 @@
-resource "aws_s3_bucket" "cloudtrail" {
-  bucket = "cafetech-cloudtrail-security-hub"
+module "cloudtrail_s3_bucket" {
+  source                 = "../modules/primitive/aws/s3_bucket"
+  bucket_name            = "cafetech-cloudtrail-security-hub"
+  override_bucket_policy = true
 }
 
-resource "aws_s3_bucket_policy" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.id
-  policy = data.aws_iam_policy_document.cloudtrail.json
+module "cloudtrail_s3_bucket_lifecycle" {
+  source    = "../modules/primitive/aws/7day_lifecycle"
+  bucket_id = module.cloudtrail_s3_bucket.bucket_id
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.id
-
-  rule {
-    bucket_key_enabled = true
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = var.kms_arn
-      sse_algorithm     = "aws:kms"
-    }
-  }
+module "cloudtrail_s3_bucket_policy" {
+  source     = "../modules/primitive/aws/s3_bucket_policy"
+  bucket_id  = module.cloudtrail_s3_bucket.bucket_id
+  bucket_arn = module.cloudtrail_s3_bucket.bucket_arn
+  additional_policy_documents = [
+    data.aws_iam_policy_document.cloudtrail_policy.json
+  ]
 }
 
-data "aws_iam_policy_document" "cloudtrail" {
+data "aws_iam_policy_document" "cloudtrail_policy" {
   statement {
     sid = "cloudtrail_access"
     principals {
@@ -32,7 +31,7 @@ data "aws_iam_policy_document" "cloudtrail" {
     ]
 
     resources = [
-      aws_s3_bucket.cloudtrail.arn,
+      module.cloudtrail_s3_bucket.bucket_arn
     ]
     condition {
       test     = "ArnLike"
@@ -62,7 +61,7 @@ data "aws_iam_policy_document" "cloudtrail" {
     ]
 
     resources = [
-      "${aws_s3_bucket.cloudtrail.arn}/*",
+      "${module.cloudtrail_s3_bucket.bucket_arn}/*",
     ]
   }
 
@@ -81,69 +80,9 @@ data "aws_iam_policy_document" "cloudtrail" {
       variable = "aws:SourceAccount"
     }
     resources = [
-      "${aws_s3_bucket.cloudtrail.arn}/*",
+      "${module.cloudtrail_s3_bucket.bucket_arn}/*",
     ]
   }
-
-  statement {
-    sid    = "ssl_access_only"
-    effect = "Deny"
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-
-    actions = [
-      "s3:*"
-    ]
-
-    condition {
-      test     = "Bool"
-      values   = ["false"]
-      variable = "aws:SecureTransport"
-    }
-
-    resources = [
-      aws_s3_bucket.cloudtrail.arn,
-      "${aws_s3_bucket.cloudtrail.arn}/*",
-    ]
-  }
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.id
-
-  rule {
-    id = "expiration"
-
-    filter {}
-
-    noncurrent_version_expiration {
-      noncurrent_days = 7
-    }
-
-    expiration {
-      days = 7
-    }
-
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_versioning" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "cloudtrail" {
-  bucket                  = aws_s3_bucket.cloudtrail.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
@@ -154,7 +93,7 @@ resource "aws_cloudwatch_log_group" "cloudtrail" {
 
 resource "aws_cloudtrail" "main" {
   name                          = "securityhub-cis-cloudtrail"
-  s3_bucket_name                = aws_s3_bucket.cloudtrail.id
+  s3_bucket_name                = module.cloudtrail_s3_bucket.bucket_id
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
   cloud_watch_logs_role_arn     = aws_iam_role.cloudwatch_logs_role.arn
   include_global_service_events = true

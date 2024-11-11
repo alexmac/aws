@@ -153,3 +153,9 @@ module "prometheus" {
   account_id = var.account_id
   region     = data.aws_region.current.name
 }
+
+module "athena" {
+  source     = "./modules/athena"
+  region     = data.aws_region.current.name
+  account_id = var.account_id
+}

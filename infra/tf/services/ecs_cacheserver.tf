@@ -22,14 +22,14 @@ resource "aws_iam_role_policy" "service_cacheserver" {
           "s3:GetObject",
           "s3:PutObject",
         ]
-        Resource = "${aws_s3_bucket.cacheserver.arn}/*"
+        Resource = "${module.cacheserver_s3_bucket.bucket_arn}/*"
       },
       {
         Effect = "Allow"
         Action = [
           "s3:ListBucket",
         ]
-        Resource = aws_s3_bucket.cacheserver.arn
+        Resource = module.cacheserver_s3_bucket.bucket_arn
       }
     ]
   })
@@ -56,21 +56,21 @@ resource "aws_lb_target_group" "cacheserver_target_group" {
   }
 }
 
-# resource "aws_lb_listener_rule" "cacheserver_listener_rule" {
-#   listener_arn = aws_lb_listener.internal_alb.arn
-#   priority     = 100
+resource "aws_lb_listener_rule" "cacheserver_listener_rule" {
+  listener_arn = aws_lb_listener.internal_alb.arn
+  priority     = 100
 
-#   action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.cacheserver_target_group.arn
-#   }
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cacheserver_target_group.arn
+  }
 
-#   condition {
-#     host_header {
-#       values = ["cache.0xcafe.tech"]
-#     }
-#   }
-# }
+  condition {
+    host_header {
+      values = ["cache.0xcafe.tech"]
+    }
+  }
+}
 
 resource "aws_cloudwatch_log_group" "cacheserver_logs" {
   name              = "/ecs/prod/service/cacheserver"
@@ -102,7 +102,7 @@ resource "aws_ecs_task_definition" "cacheserver" {
         { "name" = "AWS_REGION", "value" = "${var.region}" },
         { "name" = "GIN_MODE", "value" = "release" },
         { "name" = "PORT", "value" = "8080" },
-        { "name" = "S3_BUCKET", "value" = aws_s3_bucket.cacheserver.bucket },
+        { "name" = "S3_BUCKET", "value" = module.cacheserver_s3_bucket.bucket_id },
       ],
       logConfiguration = {
         logDriver = "awslogs"
