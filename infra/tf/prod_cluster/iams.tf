@@ -17,7 +17,7 @@ resource "aws_iam_role_policy_attachments_exclusive" "server_ec2_role" {
     "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
-    "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
+    "arn:aws:iam::${var.account_id}:policy/ssh-host-key-signing"
   ]
 }
 

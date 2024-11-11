@@ -103,6 +103,11 @@ resource "aws_autoscaling_group" "processing_asg" {
     version = "$Latest"
   }
 
+  tag {
+    key                 = "Name"
+    value               = "processing-asg-${var.vpc_id}"
+    propagate_at_launch = false
+  }
 
   instance_refresh {
     strategy = "Rolling"
@@ -169,6 +174,10 @@ resource "aws_autoscaling_group" "processing_asg" {
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "processing"
+
+  tags = {
+    Name = "processing-ecs-cluster-${var.vpc_id}"
+  }
 }
 
 # resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_cap_provider_assoc" {

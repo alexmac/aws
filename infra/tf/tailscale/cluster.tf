@@ -45,6 +45,13 @@ resource "aws_launch_template" "tailscale_launch_template" {
     }
   }
 
+  tag_specifications {
+    resource_type = "network-interface"
+    tags = {
+      Name = "tailscale"
+    }
+  }
+
   user_data = base64encode(<<EOF
 #!/bin/bash
 echo "More to come here"
@@ -69,6 +76,12 @@ resource "aws_autoscaling_group" "tailscale_asg" {
   desired_capacity = 1
   max_size         = 3
   min_size         = 1
+
+  tag {
+    key                 = "Name"
+    value               = "tailscale-asg-${var.vpc_id}"
+    propagate_at_launch = false
+  }
 
   launch_template {
     id      = aws_launch_template.tailscale_launch_template.id

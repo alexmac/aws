@@ -14,6 +14,23 @@ resource "aws_iam_role" "this" {
   path               = "/"
 }
 
+resource "aws_iam_policy" "ssh_host_key_signing" {
+  name = "ssh-host-key-signing"
+  path = "/"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = "arn:aws:lambda:${var.region}:${var.account_id}:function:calambda-ssh-hostkey-signing"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "key_signing" {
   name = "KMSKeySigning"
   role = aws_iam_role.this.name

@@ -14,7 +14,7 @@ resource "aws_iam_role_policy_attachments_exclusive" "tailscale_ec2_role" {
   role_name = aws_iam_role.tailscale_ec2_role.name
   policy_arns = [
     "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
-    "arn:aws:iam::${var.account_id}:policy/ssh-host-key-sign"
+    "arn:aws:iam::${var.account_id}:policy/ssh-host-key-signing"
   ]
 }
 

@@ -92,6 +92,11 @@ resource "aws_autoscaling_group" "github_asg" {
     version = "$Latest"
   }
 
+  tag {
+    key                 = "Name"
+    value               = "github-asg-${var.vpc_id}"
+    propagate_at_launch = false
+  }
 
   instance_refresh {
     strategy = "Rolling"

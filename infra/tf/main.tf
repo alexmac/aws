@@ -34,6 +34,19 @@ resource "aws_ec2_instance_metadata_defaults" "enforce-imdsv2" {
   http_put_response_hop_limit = 2
 }
 
+resource "aws_accessanalyzer_analyzer" "external_access" {
+  analyzer_name = "external-access-analyzer"
+  type          = "ACCOUNT"
+}
+
+resource "aws_ecs_cluster" "default" {
+  name = "default"
+
+  tags = {
+    Name = "default"
+  }
+}
+
 module "securityhub" {
   source     = "./modules/security_hub"
   region     = data.aws_region.current.name

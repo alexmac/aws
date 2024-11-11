@@ -49,6 +49,13 @@ resource "aws_launch_template" "eks_node_launch_template" {
     }
   }
 
+  tag_specifications {
+    resource_type = "network-interface"
+    tags = {
+      Name = "eks-node"
+    }
+  }
+
   user_data = base64encode(<<EOT
 ---
 apiVersion: node.eks.aws/v1alpha1

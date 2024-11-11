@@ -10,6 +10,27 @@ resource "aws_iam_role" "packer" {
   path               = "/"
 }
 
+resource "aws_iam_group" "packer_users" {
+  name = "packer-users"
+  path = "/"
+}
+
+resource "aws_iam_group_policy" "packer_assume" {
+  name  = "packer-assume"
+  group = aws_iam_group.packer_users.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "sts:AssumeRole"
+        Resource = aws_iam_role.packer.arn
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "SSM" {
   name = "SSM"
   role = aws_iam_role.packer.name

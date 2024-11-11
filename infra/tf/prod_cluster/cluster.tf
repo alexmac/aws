@@ -53,6 +53,13 @@ resource "aws_launch_template" "prod_launch_template" {
     }
   }
 
+  tag_specifications {
+    resource_type = "network-interface"
+    tags = {
+      Name = "server"
+    }
+  }
+
   user_data = base64encode(<<EOT
 #!/bin/bash -xe
 mkdir -p /etc/ecs
@@ -96,6 +103,12 @@ resource "aws_autoscaling_group" "prod_asg" {
     version = "$Latest"
   }
 
+  tag {
+    key                 = "Name"
+    value               = "prod-asg-${var.vpc_id}"
+    propagate_at_launch = false
+  }
+
   instance_refresh {
     strategy = "Rolling"
     preferences {
@@ -127,6 +140,10 @@ resource "aws_ecs_capacity_provider" "prod_ecs_capacity_provider" {
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "prod"
+
+  tags = {
+    Name = "prod-ecs-cluster-${var.vpc_id}"
+  }
 }
 
 # resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_cap_provider_assoc" {
