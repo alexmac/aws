@@ -31,6 +31,17 @@ variable "timeout" {
   default = 60
 }
 
+variable "kms_cloudtrailwatch_arn" {
+  type        = string
+  description = "KMS key ARN for CloudWatch log encryption"
+}
+
+variable "environment_variables" {
+  description = "Map of environment variables for the Lambda function"
+  type        = map(string)
+  default     = null
+}
+
 output "lambda_arn" {
   value = aws_lambda_function.this.arn
 }

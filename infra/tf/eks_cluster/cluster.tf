@@ -87,6 +87,7 @@ EOT
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/eks/prod-eks/cluster"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_eks_cluster" "cluster" {

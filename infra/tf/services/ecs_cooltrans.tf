@@ -42,6 +42,7 @@ resource "aws_lb_listener_rule" "cooltrans_listener_rule" {
 resource "aws_cloudwatch_log_group" "cooltrans_logs" {
   name              = "/ecs/prod/service/cooltrans"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_ecs_task_definition" "cooltrans" {

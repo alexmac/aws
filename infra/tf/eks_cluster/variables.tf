@@ -17,3 +17,8 @@ variable "tailscale_https_access_sg" {
 variable "vpc_id" {
   type = string
 }
+
+variable "kms_cloudtrailwatch_arn" {
+  type        = string
+  description = "KMS key ARN for CloudWatch log encryption"
+}

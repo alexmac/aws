@@ -1,6 +1,7 @@
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/ecs/${var.cluster_name}/task/${var.ami_name}"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_ecs_task_definition" "this" {

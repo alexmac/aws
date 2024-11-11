@@ -26,7 +26,7 @@ resource "aws_cloudwatch_metric_alarm" "securityhub_alarm" {
   alarm_actions             = [var.sns_arn]
   ok_actions                = [var.sns_arn]
   insufficient_data_actions = []
-  datapoints_to_alarm      = "1"
+  datapoints_to_alarm       = "1"
   dimensions = {
     MetricName = var.name
   }

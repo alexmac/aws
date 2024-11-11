@@ -34,3 +34,8 @@ variable "timeout" {
 variable "docker_image" {
   type = string
 }
+
+variable "kms_cloudtrailwatch_arn" {
+  type        = string
+  description = "KMS key ARN for CloudWatch log encryption"
+}

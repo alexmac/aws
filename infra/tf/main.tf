@@ -16,6 +16,24 @@ resource "aws_iam_account_password_policy" "strict" {
   password_reuse_prevention      = 24
 }
 
+resource "aws_ebs_encryption_by_default" "strict" {
+  enabled = true
+}
+
+resource "aws_ebs_snapshot_block_public_access" "strict" {
+  state = "block-all-sharing"
+}
+
+resource "aws_ec2_image_block_public_access" "strict" {
+  state = "block-new-sharing"
+}
+
+resource "aws_ec2_instance_metadata_defaults" "enforce-imdsv2" {
+  http_tokens                 = "required"
+  instance_metadata_tags      = "enabled"
+  http_put_response_hop_limit = 2
+}
+
 module "securityhub" {
   source     = "./modules/security_hub"
   region     = data.aws_region.current.name
@@ -53,7 +71,8 @@ module "vpc-usw2-10-0" {
     module.route53.aws_rule_group_id,
     module.route53.custom_rule_group_id,
   ]
-  vpc_name = "usw2-10-0-0-0-16"
+  vpc_name                = "usw2-10-0-0-0-16"
+  kms_cloudtrailwatch_arn = module.kms_cloudtrailwatch.arn
 }
 
 module "ecs_execution_role" {
@@ -70,12 +89,13 @@ module "tailscale-usw2-10-0" {
 }
 
 module "packer" {
-  source                 = "./packer"
-  account_id             = var.account_id
-  region                 = data.aws_region.current.name
-  private_subnet_ids     = module.vpc-usw2-10-0.private_subnet_ids
-  ecs_execution_role_arn = module.ecs_execution_role.role_arn
-  vpc_id                 = module.vpc-usw2-10-0.vpc_id
+  source                  = "./packer"
+  account_id              = var.account_id
+  region                  = data.aws_region.current.name
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  ecs_execution_role_arn  = module.ecs_execution_role.role_arn
+  vpc_id                  = module.vpc-usw2-10-0.vpc_id
+  kms_cloudtrailwatch_arn = module.kms_cloudtrailwatch.arn
 }
 
 module "prod_cluster" {
@@ -94,6 +114,7 @@ module "processing_cluster" {
   private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
   tailscale_ssh_access_sg = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
   vpc_id                  = module.vpc-usw2-10-0.vpc_id
+  kms_cloudtrailwatch_arn = module.kms_cloudtrailwatch.arn
 }
 
 # module "eks_cluster" {
@@ -103,6 +124,7 @@ module "processing_cluster" {
 #   tailscale_ssh_access_sg   = module.tailscale-usw2-10-0.tailscale_ssh_access_sg
 #   tailscale_https_access_sg = module.tailscale-usw2-10-0.tailscale_https_access_sg
 #   vpc_id                    = module.vpc-usw2-10-0.vpc_id
+#   kms_cloudtrailwatch_arn   = module.kms_cloudtrailwatch.arn
 # }
 
 module "github_actions" {
@@ -115,11 +137,12 @@ module "github_actions" {
 }
 
 module "calambda" {
-  source             = "./calambda"
-  account_id         = var.account_id
-  region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
-  vpc_id             = module.vpc-usw2-10-0.vpc_id
+  source                  = "./calambda"
+  account_id              = var.account_id
+  region                  = data.aws_region.current.name
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  vpc_id                  = module.vpc-usw2-10-0.vpc_id
+  kms_cloudtrailwatch_arn = module.kms_cloudtrailwatch.arn
 }
 
 module "services-usw2-10-0" {
@@ -134,6 +157,7 @@ module "services-usw2-10-0" {
   tailscale_https_access_sg = module.tailscale-usw2-10-0.tailscale_https_access_sg
   packer_fargate_https_sg   = module.packer.packer_fargate_https_sg
   ecs_execution_role_arn    = module.ecs_execution_role.role_arn
+  kms_cloudtrailwatch_arn   = module.kms_cloudtrailwatch.arn
 }
 
 module "cloudfront" {

@@ -1,13 +1,14 @@
 module "lambda" {
-  source             = "../docker_lambda"
-  account_id         = var.account_id
-  region             = var.region
-  private_subnet_ids = var.private_subnet_ids
-  vpc_id             = var.vpc_id
-  timeout            = var.timeout
-  lambda_role_arn    = var.lambda_role_arn
-  lambda_name        = var.schedule_name
-  docker_image       = var.docker_image
+  source                  = "../docker_lambda"
+  account_id              = var.account_id
+  region                  = var.region
+  private_subnet_ids      = var.private_subnet_ids
+  vpc_id                  = var.vpc_id
+  timeout                 = var.timeout
+  lambda_role_arn         = var.lambda_role_arn
+  lambda_name             = var.schedule_name
+  docker_image            = var.docker_image
+  kms_cloudtrailwatch_arn = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_scheduler_schedule" "this" {

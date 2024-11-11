@@ -7,7 +7,7 @@ variable "region" {
 }
 
 variable "private_subnet_ids" {
-  type = list(any)
+  type = list(string)
 }
 
 variable "tailscale_ssh_access_sg" {
@@ -16,6 +16,11 @@ variable "tailscale_ssh_access_sg" {
 
 variable "vpc_id" {
   type = string
+}
+
+variable "kms_cloudtrailwatch_arn" {
+  type        = string
+  description = "KMS key ARN for CloudWatch log encryption"
 }
 
 output "processing_sg" {

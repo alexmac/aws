@@ -12,6 +12,7 @@ resource "aws_flow_log" "flow_log" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/vpc/flow-logs/${aws_vpc.vpc.id}"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 module "flow_log_assume_role" {

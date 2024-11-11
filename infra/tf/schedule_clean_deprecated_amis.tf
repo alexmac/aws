@@ -45,14 +45,15 @@ resource "aws_iam_role_policies_exclusive" "clean_deprecated_amis_role" {
 }
 
 module "scheduled_docker_lambda" {
-  source             = "./modules/scheduled_docker_lambda"
-  account_id         = data.aws_caller_identity.current.account_id
-  region             = data.aws_region.current.name
-  private_subnet_ids = module.vpc-usw2-10-0.private_subnet_ids
-  vpc_id             = module.vpc-usw2-10-0.vpc_id
-  lambda_role_arn    = aws_iam_role.clean_deprecated_amis_role.arn
-  schedule_name      = "clean-deprecated-amis"
-  docker_image       = "staging/cleanoldamis:134c8a91cf6bb67d0540990df99ab3bc9e5c06f5"
+  source                  = "./modules/scheduled_docker_lambda"
+  account_id              = data.aws_caller_identity.current.account_id
+  region                  = data.aws_region.current.name
+  private_subnet_ids      = module.vpc-usw2-10-0.private_subnet_ids
+  vpc_id                  = module.vpc-usw2-10-0.vpc_id
+  lambda_role_arn         = aws_iam_role.clean_deprecated_amis_role.arn
+  schedule_name           = "clean-deprecated-amis"
+  docker_image            = "staging/cleanoldamis:134c8a91cf6bb67d0540990df99ab3bc9e5c06f5"
+  kms_cloudtrailwatch_arn = module.kms_cloudtrailwatch.arn
   schedules = {
     daily = {
       description               = "Deregisters any AMIs that have hit their deprecation time"

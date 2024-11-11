@@ -16,6 +16,7 @@ resource "aws_security_group" "this" {
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.lambda_name}"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_lambda_function" "this" {
@@ -38,4 +39,11 @@ resource "aws_lambda_function" "this" {
   architectures = ["arm64"]
   package_type  = "Image"
   image_uri     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.docker_image}"
+
+  dynamic "environment" {
+    for_each = var.environment_variables != null ? [1] : []
+    content {
+      variables = var.environment_variables
+    }
+  }
 }

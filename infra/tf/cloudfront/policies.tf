@@ -53,9 +53,9 @@ resource "aws_cloudfront_response_headers_policy" "public_content_response" {
     }
     strict_transport_security {
       access_control_max_age_sec = 31536000 # 1 year
-      include_subdomains         = true      # Apply to all subdomains
+      include_subdomains         = true     # Apply to all subdomains
       override                   = true
-      preload                    = true      # Include in browser HSTS preload list
+      preload                    = true # Include in browser HSTS preload list
     }
   }
 

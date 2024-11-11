@@ -45,6 +45,7 @@ resource "aws_lb_listener_rule" "cafetech_listener_rule" {
 resource "aws_cloudwatch_log_group" "cafetech_logs" {
   name              = "/ecs/prod/service/cafetech"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_ecs_task_definition" "cafetech" {

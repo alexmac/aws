@@ -37,3 +37,8 @@ variable "packer_fargate_https_sg" {
 variable "ecs_execution_role_arn" {
   type = string
 }
+
+variable "kms_cloudtrailwatch_arn" {
+  type        = string
+  description = "KMS key ARN for CloudWatch log encryption"
+}

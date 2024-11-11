@@ -40,6 +40,7 @@ resource "aws_iam_role_policies_exclusive" "this" {
 resource "aws_cloudwatch_log_group" "twitch_logs" {
   name              = "/ecs/processing/service/twitch"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_ecs_task_definition" "twitch" {

@@ -20,6 +20,7 @@ resource "aws_iam_role_policy_attachments_exclusive" "service_xray" {
 resource "aws_cloudwatch_log_group" "xray_logs" {
   name              = "/ecs/prod/service/xray"
   retention_in_days = 7
+  kms_key_id        = var.kms_cloudtrailwatch_arn
 }
 
 resource "aws_ecs_task_definition" "xray" {

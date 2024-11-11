@@ -18,6 +18,11 @@ variable "dns_rulegroup_ids" {
   type = list(string)
 }
 
+variable "kms_cloudtrailwatch_arn" {
+  type        = string
+  description = "KMS key ARN for CloudWatch log encryption"
+}
+
 output "vpc_id" {
   value       = aws_vpc.vpc.id
   description = "The VPC ID"
