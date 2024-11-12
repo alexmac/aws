@@ -9,4 +9,4 @@ aws securityhub describe-standards-controls --standards-subscription-arn "arn:aw
 
 cat sh.json | jq '[.Controls[] | select(.ControlStatus == "DISABLED")] | reduce .[] as $item ({}; .[$item.StandardsControlArn] = {Title: $item.Title, ControlId: $item.ControlId})' | jq -s add > disabled.json
 cat sh.json | jq '[.Controls[] | select(.ControlStatus == "ENABLED")] | reduce .[] as $item ({}; .[$item.StandardsControlArn] = {Title: $item.Title, ControlId: $item.ControlId})' | jq -s add > enabled.json
-jq -S . disabled.json > disabled_sorted.json
+jq -S . disabled.json | sed -E 's|.*arn:aws:securityhub:[^:]+:[^:]+:(control/([^"]+))": \{|"\2" : {|; s|("ControlId"):|\1 =|; s|("Title"):|\1     =|; s|"$|",|' > disabled_sorted.json

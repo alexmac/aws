@@ -52,6 +52,22 @@ locals {
       "ControlId" = "IAM.7",
       "Title"     = "Password policies for IAM users should have strong configurations",
     },
+    "aws-foundational-security-best-practices/v/1.0.0/Inspector.1" : {
+      "ControlId" = "Inspector.1",
+      "Title"     = "Amazon Inspector EC2 scanning should be enabled",
+    },
+    "aws-foundational-security-best-practices/v/1.0.0/Inspector.2" : {
+      "ControlId" = "Inspector.2",
+      "Title"     = "Amazon Inspector ECR scanning should be enabled",
+    },
+    "aws-foundational-security-best-practices/v/1.0.0/Inspector.3" : {
+      "ControlId" = "Inspector.3",
+      "Title"     = "Amazon Inspector Lambda code scanning should be enabled",
+    },
+    "aws-foundational-security-best-practices/v/1.0.0/Inspector.4" : {
+      "ControlId" = "Inspector.4",
+      "Title"     = "Amazon Inspector Lambda standard scanning should be enabled",
+    },
     "aws-foundational-security-best-practices/v/1.0.0/Macie.1" : {
       "ControlId" = "Macie.1",
       "Title"     = "Macie should be enabled",
