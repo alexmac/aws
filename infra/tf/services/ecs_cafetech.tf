@@ -37,7 +37,7 @@ resource "aws_lb_listener_rule" "cafetech_listener_rule" {
 
   condition {
     path_pattern {
-      values = ["/api/cafetech/*"]
+      values = ["/*"]
     }
   }
 }
