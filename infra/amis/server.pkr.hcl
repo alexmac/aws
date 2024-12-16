@@ -44,6 +44,13 @@ source "amazon-ebs" "server-arm" {
     most_free = true
     random    = false
   }
+  launch_block_device_mappings {
+    device_name = "/dev/xvda"
+    encrypted = true
+    volume_size = 16
+    volume_type = "gp3"
+    delete_on_termination = true
+  }
   instance_type               = "t4g.small"
   ssh_username                = "ec2-user"
   ssh_interface               = "private_ip"
@@ -79,6 +86,13 @@ source "amazon-ebs" "server-x86" {
     }
     most_free = true
     random    = false
+  }
+  launch_block_device_mappings {
+    device_name = "/dev/xvda"
+    encrypted = true
+    volume_size = 16
+    volume_type = "gp3"
+    delete_on_termination = true
   }
   instance_type               = "t3a.small"
   ssh_username                = "ec2-user"

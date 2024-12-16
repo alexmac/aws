@@ -57,7 +57,7 @@ resource "aws_ecs_task_definition" "cooltrans" {
   container_definitions = jsonencode([
     {
       name      = "cooltrans"
-      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cooltrans:3889b55930d535a0cbc6ae52042fc80ec7c81265"
+      image     = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/staging/cooltrans:d692c0a7f4464b029a36c1361a67fb28825eb977"
       essential = true
       portMappings = [
         {

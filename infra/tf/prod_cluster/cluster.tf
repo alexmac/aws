@@ -9,7 +9,7 @@ resource "aws_launch_template" "prod_launch_template" {
     ebs {
       delete_on_termination = true
       encrypted             = true
-      volume_size           = 8
+      volume_size           = 16
       volume_type           = "gp3"
     }
   }

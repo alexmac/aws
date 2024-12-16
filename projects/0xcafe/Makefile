@@ -6,8 +6,18 @@ build: docker-push-cafetech
 
 .PHONY: docker-build-% docker-push-% create-ecr-repo-%
 
-docker-build-%:
-	pipenv run css
+tidy:
+	bash -cxe 'isort . && black . && ruff .'
+
+upload:
+	twine upload dist/*
+css:
+	bunx tailwindcss -i ./tailwind.tw.css -o ./static/tailwind.css
+
+csswatch:
+	bunx tailwindcss -i ./tailwind.tw.css -o ./static/tailwind.css --watch
+
+docker-build-%: css
 	@if ! docker image inspect $(DOCKER_IMAGE_BASE)/staging/$*:$(HASH) > /dev/null; then \
 		echo "Building Docker image $*..."; \
 		docker build --progress plain -t $(DOCKER_IMAGE_BASE)/staging/$*:$(HASH) -f $*.dockerfile .; \

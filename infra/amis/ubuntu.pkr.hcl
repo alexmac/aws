@@ -44,6 +44,8 @@ source "amazon-ebs" "ubuntu-arm" {
       device_name = "/dev/sda1"
       encrypted = true
       volume_size = 32
+      volume_type = "gp3"
+      delete_on_termination = true
   }
   instance_type               = "t4g.xlarge"
   ssh_username                = "ubuntu"
@@ -85,6 +87,8 @@ source "amazon-ebs" "ubuntu-x86" {
       device_name = "/dev/sda1"
       encrypted = true
       volume_size = 32
+      volume_type = "gp3"
+      delete_on_termination = true
   }
   instance_type               = "t3a.xlarge"
   ssh_username                = "ubuntu"
