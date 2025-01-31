@@ -15,6 +15,8 @@ pip3 install -U --break-system-packages --ignore-installed \
 
 curl -fsSL https://tailscale.com/install.sh | sh
 
+curl -fsSL https://ollama.com/install.sh | sh
+
 source /usr/local/ami_setup/shared/ubuntu/ssh-harden.sh
 source /usr/local/ami_setup/shared/ubuntu/chrony.sh
 

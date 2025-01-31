@@ -86,11 +86,11 @@ source "amazon-ebs" "ubuntu-x86" {
   launch_block_device_mappings {
       device_name = "/dev/sda1"
       encrypted = true
-      volume_size = 32
+      volume_size = 64
       volume_type = "gp3"
       delete_on_termination = true
   }
-  instance_type               = "t3a.xlarge"
+  instance_type               = "t3a.2xlarge"
   ssh_username                = "ubuntu"
   ssh_interface               = "private_ip"
   temporary_key_pair_name     = "ubuntu x86 {{timestamp}}"

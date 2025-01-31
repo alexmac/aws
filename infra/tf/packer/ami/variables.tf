@@ -48,5 +48,5 @@ variable "kms_cloudtrailwatch_arn" {
 }
 
 locals {
-  packer_docker_image = "c88ba319f34d8e3cdd3d31f20569172eb9a9daef"
+  packer_docker_image = "57ee02273f70519767e9d9cf5724a0f1231b34db"
 }
