@@ -5,17 +5,17 @@ export NEEDRESTART_MODE=a
 
 nala update
 nala install -y \
-	python3-pip gcc git git-lfs ubuntu-drivers-common
+	gcc git git-lfs ubuntu-drivers-common
 nala install -y --no-install-recommends cuda-toolkit
 nala install -y --no-install-recommends nvidia-gds cuda-drivers nvidia-cuda-toolkit
 nala install -y --no-install-recommends libgl1-mesa-dev
 
-pip3 install -U --break-system-packages --ignore-installed \
-	awscli pipenv
 
 curl -fsSL https://tailscale.com/install.sh | sh
 
 curl -fsSL https://ollama.com/install.sh | sh
+
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 source /usr/local/ami_setup/shared/ubuntu/ssh-harden.sh
 source /usr/local/ami_setup/shared/ubuntu/chrony.sh
